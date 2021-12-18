@@ -39,7 +39,6 @@
             </tr>
         </c:forEach>
         </table>
-         
     </c:when>
     <c:otherwise>
         <c:out value="Not found user"/>

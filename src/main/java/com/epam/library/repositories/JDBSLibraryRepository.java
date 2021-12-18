@@ -15,7 +15,7 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-
+/*
 public class JDBSLibraryRepository implements LibraryRepository {
 
     private static final Logger Log = LoggerFactory.getLogger(JDBSLibraryRepository.class);
@@ -101,3 +101,4 @@ public class JDBSLibraryRepository implements LibraryRepository {
     }
 
 }
+*/

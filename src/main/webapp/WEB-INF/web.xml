@@ -42,6 +42,24 @@
         <url-pattern>/addCustomer</url-pattern>
     </servlet-mapping>
 
+    <servlet>
+        <servlet-name>SetCookiesServlet</servlet-name>
+        <servlet-class>com.epam.library.servlets.SetCookiesServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>SetCookiesServlet</servlet-name>
+        <url-pattern>/setCookies</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>GetCookiesServlet</servlet-name>
+        <servlet-class>com.epam.library.servlets.GetCookiesServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>GetCookiesServlet</servlet-name>
+        <url-pattern>/getCookies</url-pattern>
+    </servlet-mapping>
+
 
 
     <servlet>

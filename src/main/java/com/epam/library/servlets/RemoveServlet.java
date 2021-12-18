@@ -18,7 +18,7 @@ public class RemoveServlet extends HttpServlet {
     }
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        String param = request.getParameter("customerId");
+      /*  String param = request.getParameter("customerId");
         Integer customerId = Integer.valueOf(param);
         try {
             JDBCCustomerRepository jdbcCR = JDBCCustomerRepository.getInstance();
@@ -30,6 +30,6 @@ public class RemoveServlet extends HttpServlet {
         } catch (Exception e) {
             throw new IOException(e);
         }
-
+*/
     }
 }

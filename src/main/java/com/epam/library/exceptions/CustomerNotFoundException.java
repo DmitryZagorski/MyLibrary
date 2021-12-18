@@ -1,6 +1,6 @@
 package com.epam.library.exceptions;
 
-public class CustomerNotFoundException extends CustomerException {
+public class CustomerNotFoundException extends RuntimeException {
 
     private Integer id;
     private String name;

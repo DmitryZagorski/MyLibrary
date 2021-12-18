@@ -32,6 +32,5 @@ public class ConnectionPoolProvider {
     }
 
     private ConnectionPoolProvider(){
-
     }
 }

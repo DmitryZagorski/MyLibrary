@@ -15,29 +15,29 @@ import java.sql.Date;
 public class AddServlet extends HttpServlet {
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        String name = request.getParameter("fname");
-        String surname = request.getParameter("lname");
-        Date birth = Date.valueOf(request.getParameter("birth"));
-        String address = request.getParameter("address");
-        Date dateOfSignUp = Date.valueOf(request.getParameter("dateOfSignUp"));
-        try {
-            JDBCCustomerRepository jdbcCR = JDBCCustomerRepository.getInstance();
-
-            Customer customer = new Customer();
-            customer.setName(name);
-            customer.setSurname(surname);
-            customer.setBirth(birth);
-            customer.setAddress(address);
-            customer.setDateOfSignUp(dateOfSignUp);
-
-            Customer savedCustomer = jdbcCR.saveCustomer(customer);
-            request.setAttribute("addedId", savedCustomer);
-
-            request.getRequestDispatcher("second").forward(request, response);
-
-        } catch (Exception e) {
-            throw new IOException(e);
-        }
+//        String name = request.getParameter("fname");
+//        String surname = request.getParameter("lname");
+//        Date birth = Date.valueOf(request.getParameter("birth"));
+//        String address = request.getParameter("address");
+//        Date dateOfSignUp = Date.valueOf(request.getParameter("dateOfSignUp"));
+//        try {
+//            JDBCCustomerRepository jdbcCR = JDBCCustomerRepository.getInstance();
+//
+//            Customer customer = new Customer();
+//            customer.setName(name);
+//            customer.setSurname(surname);
+//            customer.setBirth(birth);
+//            customer.setAddress(address);
+//            customer.setDateOfSignUp(dateOfSignUp);
+//
+//            Customer savedCustomer = jdbcCR.saveCustomer(customer);
+//            request.setAttribute("addedId", savedCustomer);
+//
+//            request.getRequestDispatcher("second").forward(request, response);
+//
+//        } catch (Exception e) {
+//            throw new IOException(e);
+//        }
 
     }
 }

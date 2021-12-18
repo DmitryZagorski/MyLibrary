@@ -1,23 +1,33 @@
 package com.epam.library.repositories;
 
 import com.epam.library.connections.ConnectionPoolProvider;
-import com.epam.library.exceptions.CustomerException;
-import com.epam.library.exceptions.CustomerNotFoundException;
+import com.epam.library.exceptions.EntitySavingException;
 import com.epam.library.models.Customer;
+import com.epam.library.repositories.mapping.CustomerMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.sql.*;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Date;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.List;
 
-public class JDBCCustomerRepository implements CustomerRepository {
+public class JDBCCustomerRepository extends AbstractCRUDRepository<Customer> {
 
     private static final Logger Log = LoggerFactory.getLogger(JDBCCustomerRepository.class);
 
     private static JDBCCustomerRepository instance;
+
+    private static final String insertCustomer = "insert into customers (name, surname, address, email, date_of_sign_up, login, password, locked, role) values (?,?,?,?,?,?,?,?,?)";
+    private static final String updateCustomer = "update customers set name = ?, surname = ?, address = ?, email = ?, date_of_sign_up = ?, login = ?, password = ?, locked = ?, role = ? where id = ?";
+
+
+
+    public JDBCCustomerRepository() {
+        super(new CustomerMapper(), "customers");
+        instance = this;
+    }
 
     public static synchronized JDBCCustomerRepository getInstance() {
         if (instance == null) {
@@ -25,6 +35,108 @@ public class JDBCCustomerRepository implements CustomerRepository {
         }
         return instance;
     }
+
+    @Override
+    public Customer getById(Integer id) {
+        return super.getById(id);
+    }
+
+    @Override
+    public List<Customer> findAll() {
+        return super.findAll();
+    }
+
+    @Override
+    public List<Customer> findAllSorted(String fieldName, Integer limit, Integer offset) {
+        return super.findAllSorted(fieldName, limit, offset);
+    }
+
+    @Override
+    public void removeById(Integer id) {
+        super.removeById(id);
+    }
+
+    @Override
+    public void removeAll() {
+        super.removeAll();
+    }
+
+
+
+
+    public Customer saveCustomer(Customer customer) {
+        PreparedStatement prStatement = null;
+        try (Connection connection = ConnectionPoolProvider.getConnection()) {
+            if (customer.getId() == 0) {
+                prStatement = connection.prepareStatement(insertCustomer, prStatement.RETURN_GENERATED_KEYS);
+            } else {
+                prStatement = connection.prepareStatement(updateCustomer, prStatement.RETURN_GENERATED_KEYS);
+            }
+            setCustomerValues(customer, prStatement);
+            if (customer.getId() != 0) {
+                prStatement.setInt(10, customer.getId());
+            }
+            int result = prStatement.executeUpdate();
+            if (result != 1) {
+                throw new EntitySavingException("Customer was not saved!");
+            }
+            ResultSet generatedKey = prStatement.getGeneratedKeys();
+            if (generatedKey.next()) {
+                customer.setId(generatedKey.getInt(1));
+            }
+            return customer;
+        } catch (SQLException e) {
+            Log.error("Something wrong during saving customer", e);
+            throw new EntitySavingException(e);
+        } finally {
+            if (prStatement != null) {
+                try {
+                    prStatement.close();
+                } catch (SQLException e) {
+                    throw new EntitySavingException(e);
+                }
+            }
+        }
+    }
+
+    private void setCustomerValues(Customer customer, PreparedStatement prStatement) throws SQLException {
+        prStatement.setString(1, customer.getName());
+        prStatement.setString(2, customer.getSurname());
+        prStatement.setString(3, customer.getAddress());
+        prStatement.setString(4, customer.getEmail());
+        prStatement.setDate(5, customer.getDateOfSignUp());
+        prStatement.setString(6, customer.getLogin());
+        prStatement.setString(7, customer.getPassword());
+        prStatement.setBoolean(8, customer.getLocked());
+        prStatement.setInt(9, customer.getRole().ordinal());
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/*
 
     @Override
     public void addCustomer(Customer customer) {
@@ -207,4 +319,6 @@ public class JDBCCustomerRepository implements CustomerRepository {
             throw new CustomerException(e);
         }
     }
+
+ */
 }

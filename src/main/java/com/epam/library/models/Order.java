@@ -6,75 +6,57 @@ import java.util.Date;
 public class Order {
 
     private int id;
-    private Customer customer;
-    private Book book;
-    private int bookQuantity;
-    private PlaceOfReading placeOfReading;
-    private Date startDate;
-    private Date experienceDate;
-
-    public Order(Customer customer, Book book, PlaceOfReading placeOfReading, int bookQuantity, Date startDate, Date experienceDate) {
-        this.customer = customer;
-        this.book = book;
-        this.bookQuantity = bookQuantity;
-        this.placeOfReading = placeOfReading;
-        this.startDate = startDate;
-        this.experienceDate = experienceDate;
-    }
+    private int cartBookId;
+    private int totalQuantity;
+    private int customerId;
+    private java.util.Date date;
+    private boolean active;
 
     public int getId() {
         return id;
-    }
-
-    public Customer getCustomer() {
-        return customer;
-    }
-
-    public Book getBook() {
-        return book;
-    }
-
-    public int getBookQuantity() {
-        return bookQuantity;
-    }
-
-    public PlaceOfReading getPlaceOfReading() {
-        return placeOfReading;
-    }
-
-    public Date getStartDate() {
-        return startDate;
-    }
-
-    public Date getExperienceDate() {
-        return experienceDate;
     }
 
     public void setId(int id) {
         this.id = id;
     }
 
-    public void setCustomer(Customer customer) {
-        this.customer = customer;
+    public int getCartBookId() {
+        return cartBookId;
     }
 
-    public void setBook(Book book) {
-        this.book = book;
+    public void setCartBookId(int cartBookId) {
+        this.cartBookId = cartBookId;
     }
 
-    public void setBookQuantity(int bookQuantity) {
-        this.bookQuantity = bookQuantity;
+    public int getTotalQuantity() {
+        return totalQuantity;
     }
 
-    public void setPlaceOfReading(PlaceOfReading placeOfReading) {
-        this.placeOfReading = placeOfReading;
+    public void setTotalQuantity(int totalQuantity) {
+        this.totalQuantity = totalQuantity;
     }
 
-    public void setStartDate(Date startDate) {
-        this.startDate = startDate;
+    public int getCustomerId() {
+        return customerId;
     }
 
-    public void setExperienceDate(Date experienceDate) {
-        this.experienceDate = experienceDate;
+    public void setCustomerId(int customerId) {
+        this.customerId = customerId;
+    }
+
+    public Date getDate() {
+        return date;
+    }
+
+    public void setDate(Date date) {
+        this.date = date;
+    }
+
+    public boolean isActive() {
+        return active;
+    }
+
+    public void setActive(boolean active) {
+        this.active = active;
     }
 }

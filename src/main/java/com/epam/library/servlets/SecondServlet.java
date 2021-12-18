@@ -19,16 +19,16 @@ public class SecondServlet extends HttpServlet {
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
-        try {
-            JDBCCustomerRepository jdbcCR = JDBCCustomerRepository.getInstance();
-            Collection<Customer> customers = jdbcCR.getAllCustomers();
-            request.setAttribute("customers", customers);
-
-            request.getRequestDispatcher("customers").forward(request, response);
-
-        } catch (Exception e) {
-            throw new IOException(e);
-        }
+//        try {
+//            JDBCCustomerRepository jdbcCR = JDBCCustomerRepository.getInstance();
+//            Collection<Customer> customers = jdbcCR.getAllCustomers();
+//            request.setAttribute("customers", customers);
+//
+//            request.getRequestDispatcher("customers").forward(request, response);
+//
+//        } catch (Exception e) {
+//            throw new IOException(e);
+//        }
 
     }
 }
