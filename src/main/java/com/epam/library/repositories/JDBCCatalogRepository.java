@@ -1,10 +1,9 @@
 package com.epam.library.repositories;
 
 import com.epam.library.connections.ConnectionPoolProvider;
-import com.epam.library.exceptions.BookException;
-import com.epam.library.exceptions.CustomerException;
-import com.epam.library.models.Book;
-import com.epam.library.models.Customer;
+import com.epam.library.exceptions.EntityRerievalException;
+import com.epam.library.models.Catalog;
+import com.epam.library.repositories.mapping.CatalogMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -13,21 +12,81 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
-/*
-public class JDBSLibraryRepository implements LibraryRepository {
 
-    private static final Logger Log = LoggerFactory.getLogger(JDBSLibraryRepository.class);
+public class JDBCCatalogRepository extends AbstractCRUDRepository<Catalog> implements CatalogRepository {
 
-    private static JDBSLibraryRepository instance;
+    private static final Logger Log = LoggerFactory.getLogger(JDBCCatalogRepository.class);
 
-    public static synchronized JDBSLibraryRepository getInstance() {
+    private static JDBCCatalogRepository instance;
+    private static final String findFreeBooksSQL = "select * from catalog where free_quantity not null";
+
+    public JDBCCatalogRepository() {
+        super(new CatalogMapper(), "catalog");
+    }
+
+    public static synchronized JDBCCatalogRepository getInstance() {
         if (instance == null) {
-            instance = new JDBSLibraryRepository();
+            instance = new JDBCCatalogRepository();
         }
         return instance;
     }
+
+    @Override
+    public Catalog getById(Integer id) {
+        return super.getById(id);
+    }
+
+    @Override
+    public List<Catalog> findAll() {
+        return super.findAll();
+    }
+
+    @Override
+    public List<Catalog> findAllSorted(String fieldName, Integer limit, Integer offset) {
+        return super.findAllSorted(fieldName, limit, offset);
+    }
+
+    @Override
+    public void removeById(Integer id) {
+        super.removeById(id);
+    }
+
+    @Override
+    public void removeAll() {
+        super.removeAll();
+    }
+
+    @Override
+    public List<Catalog> getFreeBooksInLibrary() {
+        try (Connection connection = ConnectionPoolProvider.getConnection();
+             Statement statement = connection.createStatement();
+             ResultSet resultSet = statement.executeQuery(findFreeBooksSQL)) {
+            List<Catalog> books = new ArrayList<>();
+            while (resultSet.next()) {
+                books.add(new CatalogMapper().toObject(resultSet));
+            }
+            return books;
+        } catch (SQLException e) {
+            Log.error("Something wrong during retrieval id ", e);
+            throw new EntityRerievalException();
+        }
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+ /*
 
     @Override
     public Collection<Customer> getAllCustomers() {
@@ -100,5 +159,5 @@ public class JDBSLibraryRepository implements LibraryRepository {
         return book;
     }
 
-}
+
 */

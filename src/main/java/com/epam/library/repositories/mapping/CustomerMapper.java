@@ -17,12 +17,11 @@ public class CustomerMapper implements MapperToObject<Customer> {
         customer.setAddress(resultSet.getString("address"));
         customer.setEmail(resultSet.getString("email"));
         customer.setDateOfSignUp(resultSet.getDate("date_of_sign_up"));
+        customer.setLocked(resultSet.getBoolean("locked"));
         customer.setLogin(resultSet.getString("login"));
         customer.setPassword(resultSet.getString("password"));
-        customer.setLocked(resultSet.getBoolean("locked"));
         int ordinal = resultSet.getInt("role");
-        PersonRole personRole = PersonRole.getRoleByOrdinal(ordinal);
-        customer.setRole(personRole);
+        customer.setRole(PersonRole.getRoleByOrdinal(ordinal));
         return customer;
     }
 }

@@ -4,23 +4,14 @@ import com.epam.library.models.Book;
 
 import java.util.Collection;
 import java.util.Date;
+import java.util.List;
 
 public interface BookRepository {
 
-    void addBook(Book book, Integer quantity);
+    List<Book> getBooksByTitle(String title);
 
-    void removeBookById(Integer id);
+    List<Book> getBooksByAuthor(String author);
 
-    void removeAllBooks();
-
-    Book getBookById(Integer id);
-
-    Collection<Book> getBooksByTitle(String title);
-
-    Collection<Book> getBooksByAuthor(String author);
-
-    Collection<Book> getBooksByDateOfIssue(Date dateOfIssue);
-
-    Collection<Book> getAllBooks();
+    List<Book> getBooksByDateOfIssue(Date dateOfIssue);
 
 }

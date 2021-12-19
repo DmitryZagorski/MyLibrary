@@ -53,12 +53,10 @@ public abstract class AbstractCRUDRepository<T> {
              Statement statement = connection.createStatement();
              ResultSet resultSet = statement.executeQuery(String.format(selectAll, tableName))) {
             List<T> entities = new ArrayList<>();
-            if (resultSet.next()) {
+            while (resultSet.next()) {
                 entities.add((T) mapperToObject.toObject(resultSet));
-                return entities;
-            } else {
-                return null;
             }
+            return entities;
         } catch (SQLException e) {
             Log.error("Something wrong during retrieval entity ", e);
             throw new EntityRerievalException();
@@ -98,10 +96,7 @@ public abstract class AbstractCRUDRepository<T> {
     public void removeAll() {
         try (Connection connection = ConnectionPoolProvider.getConnection()) {
             Statement statement = connection.createStatement();
-            int removing = statement.executeUpdate(String.format(removeAll, tableName));
-            if (removing != 1) {
-                Log.info("Entities weren't removed");
-            }
+            statement.execute(String.format(removeAll, tableName));
         } catch (SQLException e) {
             Log.error("Something wrong during removing all entities", e);
             throw new EntityRemoveException(e);
