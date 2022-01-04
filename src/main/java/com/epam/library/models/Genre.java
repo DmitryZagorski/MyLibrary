@@ -13,4 +13,14 @@ public enum Genre {
         return Arrays.asList(Genre.values()).stream().filter(genre -> ordinal == genre.ordinal()).findFirst().get();
     }
 
+    public static Genre getGenreByName(String name){
+        Genre genreByName = null;
+        Genre[] genres = Genre.values();
+        for (Genre genre : genres) {
+            if (genre.toString().equals(name)){
+                genreByName = genre;
+            }
+        }
+        return genreByName;
+    }
 }

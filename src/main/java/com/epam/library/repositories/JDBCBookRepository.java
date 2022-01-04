@@ -5,6 +5,7 @@ import com.epam.library.exceptions.BookException;
 import com.epam.library.exceptions.BookNotFoundException;
 import com.epam.library.exceptions.EntitySavingException;
 import com.epam.library.models.Book;
+import com.epam.library.models.Genre1;
 import com.epam.library.repositories.mapping.BookMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -14,7 +15,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-public class JDBCBookRepository extends AbstractCRUDRepository<Book> implements BookRepository{
+public class JDBCBookRepository extends AbstractCRUDRepository<Book>{
 
     private static final Logger Log = LoggerFactory.getLogger(JDBCBookRepository.class);
 
@@ -67,9 +68,9 @@ public class JDBCBookRepository extends AbstractCRUDRepository<Book> implements 
             } else {
                 prStatement = connection.prepareStatement(updateBookSQL, prStatement.RETURN_GENERATED_KEYS);
             }
-            setCustomerValues(book, prStatement);
+            setBookValues(book, prStatement);
             if (book.getId() != 0) {
-                prStatement.setInt(10, book.getId());
+                prStatement.setInt(5, book.getId()); //////////???????????
             }
             int result = prStatement.executeUpdate();
             if (result != 1) {
@@ -94,7 +95,6 @@ public class JDBCBookRepository extends AbstractCRUDRepository<Book> implements 
         }
     }
 
-    @Override
     public List<Book> getBooksByTitle(String title) {
         String getBookByTitle = "select * from books where title=".concat(title);
         try (Connection connection = ConnectionPoolProvider.getConnection();
@@ -111,7 +111,6 @@ public class JDBCBookRepository extends AbstractCRUDRepository<Book> implements 
         }
     }
 
-    @Override
     public List<Book> getBooksByAuthor(String author) {
         String getBookByAuthor = "select * from books where author=".concat(author);
         try (Connection connection = ConnectionPoolProvider.getConnection();
@@ -128,7 +127,6 @@ public class JDBCBookRepository extends AbstractCRUDRepository<Book> implements 
         }
     }
 
-    @Override
     public List<Book> getBooksByDateOfIssue(Date dateOfIssue) {
         String getBookByDate = "select * from books where date_of_issue=".concat(dateOfIssue.toString());
         try (Connection connection = ConnectionPoolProvider.getConnection();
@@ -145,12 +143,35 @@ public class JDBCBookRepository extends AbstractCRUDRepository<Book> implements 
         }
     }
 
-    private void setCustomerValues(Book book, PreparedStatement prStatement) throws SQLException {
+    public List<Genre1> getAllGenres(){
+        String findAllGenres = "select * from genres";
+        try(Connection connection = ConnectionPoolProvider.getConnection();
+            Statement statement = connection.createStatement()){
+            ResultSet resultSet = statement.executeQuery(findAllGenres);
+            List<Genre1> genres = new ArrayList<>();
+            while(resultSet.next()){
+                Genre1 genre1 = new Genre1();
+                genre1.setId(resultSet.getInt("id"));
+                genre1.setTitle(resultSet.getString("title"));
+                genres.add(genre1);
+            }
+            return genres;
+        } catch (SQLException e) {
+            Log.error("Retrieval of all genres failed");
+            throw new BookException(e);
+        }
+    }
+
+    private void setBookValues(Book book, PreparedStatement prStatement) throws SQLException {
         prStatement.setString(1, book.getTitle());
         prStatement.setString(2, book.getAuthor());
         prStatement.setDate(3, book.getIssueDate());
-        prStatement.setInt(4, book.getGenre().ordinal());
+        prStatement.setInt(4, book.getGenreId());
+        //prStatement.setInt(4, book.getGenre().ordinal());
+        //prStatement.setInt(4, book.getGenreID());
     }
+
+
 }
 
  /*

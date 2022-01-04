@@ -14,7 +14,7 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
-public class JDBCCatalogRepository extends AbstractCRUDRepository<Catalog> implements CatalogRepository {
+public class JDBCCatalogRepository extends AbstractCRUDRepository<Catalog> {
 
     private static final Logger Log = LoggerFactory.getLogger(JDBCCatalogRepository.class);
 
@@ -57,7 +57,6 @@ public class JDBCCatalogRepository extends AbstractCRUDRepository<Catalog> imple
         super.removeAll();
     }
 
-    @Override
     public List<Catalog> getFreeBooksInLibrary() {
         try (Connection connection = ConnectionPoolProvider.getConnection();
              Statement statement = connection.createStatement();

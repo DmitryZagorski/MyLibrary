@@ -1,6 +1,6 @@
 package com.epam.library.models;
 
-import java.util.Date;
+import java.sql.Date;
 import java.util.Objects;
 
 public class Customer {
@@ -10,7 +10,7 @@ public class Customer {
     private String surname;
     private String address;
     private String email;
-    private java.util.Date dateOfSignUp;
+    private Date dateOfSignUp;
     private PersonRole role;
     private Boolean locked;
 
@@ -57,8 +57,8 @@ public class Customer {
         this.email = email;
     }
 
-    public java.sql.Date getDateOfSignUp() {
-        return (java.sql.Date) dateOfSignUp;
+    public Date getDateOfSignUp() {
+        return dateOfSignUp;
     }
 
     public void setDateOfSignUp(Date dateOfSignUp) {

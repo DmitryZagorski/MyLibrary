@@ -1,9 +1,11 @@
 package com.epam.library.repositories;
 
 import com.epam.library.connections.ConnectionPoolProvider;
+import com.epam.library.exceptions.CustomerException;
 import com.epam.library.exceptions.CustomerNotFoundException;
 import com.epam.library.exceptions.EntitySavingException;
 import com.epam.library.models.Customer;
+import com.epam.library.models.PersonRole;
 import com.epam.library.repositories.mapping.CustomerMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -11,7 +13,7 @@ import org.slf4j.LoggerFactory;
 import java.sql.*;
 import java.util.List;
 
-public class JDBCCustomerRepository extends AbstractCRUDRepository<Customer> implements CustomerRepository {
+public class JDBCCustomerRepository extends AbstractCRUDRepository<Customer> {
 
     private static final Logger Log = LoggerFactory.getLogger(JDBCCustomerRepository.class);
 
@@ -20,6 +22,7 @@ public class JDBCCustomerRepository extends AbstractCRUDRepository<Customer> imp
     private static final String insertCustomerSQL = "insert into customers (name, surname, address, email, date_of_sign_up, locked, login, password, role) values (?,?,?,?,?,?,?,?,?)";
     private static final String updateCustomerSQL = "update customers set name = ?, surname = ?, address = ?, email = ?, date_of_sign_up = ?, locked = ?, login = ?, password = ?, role = ? where id = ?";
     private static final String getCustomerByNameAndSurnameSQL = "select * from customers where name = '%s' and surname = '%s'";
+    private static final String getCustomerByLoginSQL = "select * from customers where login = '%s'";
 
     public JDBCCustomerRepository() {
         super(new CustomerMapper(), "customers");
@@ -33,7 +36,6 @@ public class JDBCCustomerRepository extends AbstractCRUDRepository<Customer> imp
         return instance;
     }
 
-    @Override
     public Customer getCustomerByNameAndSurname(String name, String surname) {
         try (Connection connection = ConnectionPoolProvider.getConnection();
              Statement statement = connection.createStatement();
@@ -48,6 +50,23 @@ public class JDBCCustomerRepository extends AbstractCRUDRepository<Customer> imp
         } catch (SQLException e) {
             Log.error("Something wrong during retrieval name " + name + " and surname " + surname, e);
             throw new CustomerNotFoundException(name, surname, e);
+        }
+    }
+
+    public Customer getCustomerByLogin(String login) {
+        try (Connection connection = ConnectionPoolProvider.getConnection();
+             Statement statement = connection.createStatement();
+             ResultSet resultSet = statement.executeQuery(String.format(getCustomerByLoginSQL, login))) {
+            if (resultSet.next()) {
+                Customer customer = new CustomerMapper().toObject(resultSet);
+                return customer;
+            } else {
+                Log.info("No customer with such login");
+                return null;
+            }
+        } catch (SQLException e) {
+            Log.error("Something wrong during retrieval login" + login, e);
+            throw new CustomerException(e);
         }
     }
 

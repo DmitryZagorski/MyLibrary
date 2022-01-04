@@ -94,6 +94,30 @@ class JDBCCustomerRepositoryTest {
     }
 
     @Test
+    void getCustomerByLogin() {
+        JDBCCustomerRepository instance = new JDBCCustomerRepository();
+
+        instance.removeAll();
+
+        Customer c1 = new Customer();
+        c1.setName("Dmitry");
+        c1.setSurname("Zagorski");
+        c1.setAddress("Grodno");
+        c1.setEmail("1@mail.ru");
+        c1.setDateOfSignUp(Date.valueOf("2011-10-20"));
+        c1.setLogin("Log");
+        c1.setPassword("Pass");
+        c1.setLocked(Boolean.FALSE);
+        c1.setRole(PersonRole.Admin);
+
+        instance.saveCustomer(c1);
+
+        Customer c2 = instance.getCustomerByLogin(c1.getLogin());
+
+        Assertions.assertEquals(c1, c2);
+    }
+
+    @Test
     void findAllCustomers() {
 
         JDBCCustomerRepository instance = JDBCCustomerRepository.getInstance();

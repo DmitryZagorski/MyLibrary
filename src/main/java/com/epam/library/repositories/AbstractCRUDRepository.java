@@ -59,7 +59,7 @@ public abstract class AbstractCRUDRepository<T> {
             return entities;
         } catch (SQLException e) {
             Log.error("Something wrong during retrieval entity ", e);
-            throw new EntityRerievalException();
+            throw new EntityRerievalException(e);
         }
     }
 
@@ -79,6 +79,8 @@ public abstract class AbstractCRUDRepository<T> {
             throw new EntityRerievalException();
         }
     }
+
+
 
     public void removeById(Integer id) {
         try (Connection connection = ConnectionPoolProvider.getConnection()) {

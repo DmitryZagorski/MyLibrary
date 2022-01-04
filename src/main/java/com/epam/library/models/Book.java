@@ -9,7 +9,15 @@ public class Book {
     private String title;
     private String author;
     private Date issueDate;
-    private Genre genre;
+    private Integer genreId;
+
+    public Integer getGenreId() {
+        return genreId;
+    }
+
+    public void setGenreId(Integer genreId) {
+        this.genreId = genreId;
+    }
 
     public int getId() {
         return id;
@@ -36,19 +44,11 @@ public class Book {
     }
 
     public Date getIssueDate() {
-        return issueDate;
+        return (Date) issueDate;
     }
 
     public void setIssueDate(Date issueDate) {
         this.issueDate = issueDate;
-    }
-
-    public Genre getGenre() {
-        return genre;
-    }
-
-    public void setGenre(Genre genre) {
-        this.genre = genre;
     }
 
     @Override
@@ -60,11 +60,22 @@ public class Book {
                 Objects.equals(title, book.title) &&
                 Objects.equals(author, book.author) &&
                 Objects.equals(issueDate, book.issueDate) &&
-                genre == book.genre;
+                Objects.equals(genreId, book.genreId);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, title, author, issueDate, genre);
+        return Objects.hash(id, title, author, issueDate, genreId);
+    }
+
+    @Override
+    public String toString() {
+        return "Book{" +
+                "id=" + id +
+                ", title='" + title + '\'' +
+                ", author='" + author + '\'' +
+                ", issueDate=" + issueDate +
+                ", genreId=" + genreId +
+                '}';
     }
 }
