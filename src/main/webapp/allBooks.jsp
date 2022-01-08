@@ -1,6 +1,4 @@
-<%@ page import="com.epam.library.repositories.JDBCBookRepository" %>
-<%@ page import="com.epam.library.models.Genre1" %>
-<%@ page import="java.util.List" %><%--
+<%--
   Created by IntelliJ IDEA.
   User: Дмитрий
   Date: 07.12.2021

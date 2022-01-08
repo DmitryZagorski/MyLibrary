@@ -87,6 +87,43 @@
         <url-pattern>/removeBookServlet</url-pattern>
     </servlet-mapping>
 
+    <servlet>
+        <servlet-name>CatalogServlet</servlet-name>
+        <servlet-class>com.epam.library.servletsTwo.CatalogServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>CatalogServlet</servlet-name>
+        <url-pattern>/catalogServlet</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>AddBookToCatalogServlet</servlet-name>
+        <servlet-class>com.epam.library.servletsTwo.AddBookToCatalogServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>AddBookToCatalogServlet</servlet-name>
+        <url-pattern>/addBookToCatalogServlet</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>PrepareBooksToCatalogServlet</servlet-name>
+        <servlet-class>com.epam.library.servletsTwo.PrepareBooksToCatalogServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>PrepareBooksToCatalogServlet</servlet-name>
+        <url-pattern>/prepareBooksToCatalogServlet</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>AddBookToCartServlet</servlet-name>
+        <servlet-class>com.epam.library.servletsTwo.AddBookToCartServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>AddBookToCartServlet</servlet-name>
+        <url-pattern>/addBookToCartServlet</url-pattern>
+    </servlet-mapping>
+
+
 
 
 

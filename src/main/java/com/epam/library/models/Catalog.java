@@ -1,9 +1,12 @@
 package com.epam.library.models;
 
+import java.util.Objects;
+
 public class Catalog {
 
     private int id;
     private int bookId;
+    private String bookTitle;
     private int totalQuantity;
     private int freeQuantity;
 
@@ -37,5 +40,39 @@ public class Catalog {
 
     public void setFreeQuantity(int freeQuantity) {
         this.freeQuantity = freeQuantity;
+    }
+
+    public String getBookTitle() {
+        return bookTitle;
+    }
+
+    public void setBookTitle(String bookTitle) {
+        this.bookTitle = bookTitle;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Catalog catalog = (Catalog) o;
+        return id == catalog.id &&
+                totalQuantity == catalog.totalQuantity &&
+                freeQuantity == catalog.freeQuantity &&
+                Objects.equals(bookTitle, catalog.bookTitle);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, bookTitle, totalQuantity, freeQuantity);
+    }
+
+    @Override
+    public String toString() {
+        return "Catalog{" +
+                "id=" + id +
+                ", bookTitle='" + bookTitle + '\'' +
+                ", totalQuantity=" + totalQuantity +
+                ", freeQuantity=" + freeQuantity +
+                '}';
     }
 }

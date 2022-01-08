@@ -11,7 +11,7 @@ public class CatalogMapper implements MapperToObject<Catalog> {
 
         Catalog catalog = new Catalog();
         catalog.setId(resultSet.getInt("id"));
-        catalog.setBookId(resultSet.getInt("book_id"));
+        //catalog.setBookTitle(resultSet.getString("title"));
         catalog.setTotalQuantity(resultSet.getInt("total_quantity"));
         catalog.setFreeQuantity(resultSet.getInt("free_quantity"));
         return catalog;

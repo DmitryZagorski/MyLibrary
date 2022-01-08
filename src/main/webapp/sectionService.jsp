@@ -38,9 +38,9 @@
                     <input class="send_btn" type="submit" value="Edit book">
                 </div>
             </form>
-            <form action="allBooksServlet">
+            <form action="AddBookToCatalogServlet">
                 <div class="col-sm-12">
-                    <input class="send_btn" type="submit" value="Find book">
+                    <input class="send_btn" type="submit" value="Add book to catalog">
                 </div>
             </form>
 
@@ -50,6 +50,19 @@
             <form action="">
                 <div class="col-sm-12">
                     <input class="send_btn" type="submit" value="View all orders">
+                </div>
+            </form>
+
+            <h1> Catalog</h1>
+
+            <form action="catalogServlet">
+                <div class="col-sm-12">
+                    <input class="send_btn" type="submit" value="View all books">
+                </div>
+            </form>
+            <form action="prepareBooksToCatalogServlet">
+                <div class="col-sm-12">
+                    <input class="send_btn" type="submit" value="Add books to catalog">
                 </div>
             </form>
 

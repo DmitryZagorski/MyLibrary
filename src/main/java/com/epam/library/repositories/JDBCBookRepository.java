@@ -70,7 +70,7 @@ public class JDBCBookRepository extends AbstractCRUDRepository<Book>{
             }
             setBookValues(book, prStatement);
             if (book.getId() != 0) {
-                prStatement.setInt(5, book.getId()); //////////???????????
+                prStatement.setInt(5, book.getId());
             }
             int result = prStatement.executeUpdate();
             if (result != 1) {
