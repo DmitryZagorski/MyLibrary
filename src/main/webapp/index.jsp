@@ -99,8 +99,8 @@
                         <button>Search</button>
                     </form>
                 </form>
-                <a href="#" class="templatemo_logo">
-                    <h1>Library</h1>
+                <a href="/cartServlet" class="templatemo_logo">
+                    <h1>Cart</h1>
                 </a> <!-- /.logo -->
             </div> <!-- /.col-md-12 -->
         </div> <!-- /.row -->

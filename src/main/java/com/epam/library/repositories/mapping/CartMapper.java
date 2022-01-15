@@ -14,6 +14,7 @@ public class CartMapper implements MapperToObject<Cart> {
         cart.setBookId(resultSet.getInt("book_id"));
         cart.setBookQuantity(resultSet.getInt("book_quantity"));
         cart.setCustomerId(resultSet.getInt("customer_id"));
+        cart.setOrderId(resultSet.getInt("order_id"));
         return cart;
     }
 }

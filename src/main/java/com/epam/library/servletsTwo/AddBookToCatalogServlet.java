@@ -45,14 +45,7 @@ public class AddBookToCatalogServlet extends HttpServlet {
             catalog.setTotalQuantity(totalQuantityInt);
             catalog.setFreeQuantity(freeQuantityInt);
 
-            JDBCCatalogRepository instance = JDBCCatalogRepository.getInstance();
-            List<Catalog> all = instance.findAll();
-//            for (Catalog book : all) {
-//                if (book.getBookId()==catalog.getBookId()){
-//                    Log.info("Book with that name already exist in catalog");
-//                }
-//                instance.addBookToCatalog(catalog);
-//            }
+            JDBCCatalogRepository.getInstance().addBookToCatalog(catalog);  //added at last
 
             request.setAttribute("addedId", catalog.getId());
             request.setAttribute("addedBookTitle", catalog.getBookTitle());
@@ -63,15 +56,3 @@ public class AddBookToCatalogServlet extends HttpServlet {
         }
     }
 }
-/*<form action="/addBookToCatalogServlet?bookId=${book.id}" method="get">
-                            <label for="quantity">Quantity</label><br>
-                            <input type="text" id="quantity" name="quantity"><br>
-                            <input type="submit" value="Add book">
-
-
-
-                            <form method="get">
-                            <label for="quantity">Quantity</label><br>
-                            <input type="text" id="quantity" name="quantity"><br>
-                            <a href="/addBookToCatalogServlet?bookId=${book.id}">Add book to catalog</a>
-                        </form>*/

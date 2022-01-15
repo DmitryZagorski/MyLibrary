@@ -8,6 +8,7 @@ public class Cart {
     private int bookId;
     private int bookQuantity;
     private int CustomerId;
+    private int orderId;
 
     public int getId() {
         return id;
@@ -41,6 +42,14 @@ public class Cart {
         CustomerId = customerId;
     }
 
+    public int getOrderId() {
+        return orderId;
+    }
+
+    public void setOrderId(int orderId) {
+        this.orderId = orderId;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -49,12 +58,13 @@ public class Cart {
         return id == cart.id &&
                 bookId == cart.bookId &&
                 bookQuantity == cart.bookQuantity &&
-                CustomerId == cart.CustomerId;
+                CustomerId == cart.CustomerId &&
+                orderId == cart.orderId;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, bookId, bookQuantity, CustomerId);
+        return Objects.hash(id, bookId, bookQuantity, CustomerId, orderId);
     }
 
     @Override
@@ -64,6 +74,7 @@ public class Cart {
                 ", bookId=" + bookId +
                 ", bookQuantity=" + bookQuantity +
                 ", CustomerId=" + CustomerId +
+                ", orderId=" + orderId +
                 '}';
     }
 }

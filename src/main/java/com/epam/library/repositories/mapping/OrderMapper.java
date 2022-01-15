@@ -11,11 +11,13 @@ public class OrderMapper implements MapperToObject<Order> {
 
         Order order = new Order();
         order.setId(resultSet.getInt("id"));
-        order.setCartBookId(resultSet.getInt("cart_book_id"));
         order.setTotalQuantity(resultSet.getInt("total_quantity"));
         order.setCustomerId(resultSet.getInt("customer_id"));
-        order.setDate(resultSet.getDate("date"));
-       order.setActive(resultSet.getBoolean("active"));
+        order.setCreationDate(resultSet.getDate("date_of_creation"));
+        order.setExpirationDate(resultSet.getDate("expiration_date"));
+        order.setPlaceOfReadingId(resultSet.getInt("place_of_reading_id"));
+        order.setActive(resultSet.getBoolean("active"));
         return order;
+
     }
 }

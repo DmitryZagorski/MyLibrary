@@ -28,20 +28,18 @@
                     <td>${catalog.bookTitle}</td>
                     <td>${catalog.totalQuantity}</td>
                     <td>${catalog.freeQuantity}</td>
-                    <td>
-                        <a href="/addBookToCartServlet&catalogId=${catalog.id}?bookId=${catalog.bookId}?freeQuantity=${catalog.freeQuantity}">Add
-                            book to cart</a></td>
+                    <td><a href="/addBookToCartServlet?bookTitle=${catalog.bookTitle}&freeQuantity=${catalog.freeQuantity}">
+                        Add book to cart</a></td>
                 </tr>
             </c:forEach>
         </table>
-
     </c:when>
     <c:otherwise>
         <c:out value="Books not found in catalog"/>
     </c:otherwise>
 </c:choose>
 
-<c:if test="${addedId ne null}">Book ' ${addedBookTitle} ' was added successfully</c:if>
+<c:if test="${addedId ne null}">Book ${addedBookTitle} was added successfully</c:if>
 
 </body>
 </html>

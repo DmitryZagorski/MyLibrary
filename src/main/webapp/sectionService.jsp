@@ -66,6 +66,15 @@
                 </div>
             </form>
 
+            <h1> Cart </h1>
+
+            <form action="cartServlet">
+                <div class="col-sm-12">
+                    <input class="send_btn" type="submit" value="View all cart">
+                </div>
+            </form>
+
+
         </div> <!-- /.row -->
     </div> <!-- /.container -->
 </div> <!-- /.contact -->

@@ -123,8 +123,32 @@
         <url-pattern>/addBookToCartServlet</url-pattern>
     </servlet-mapping>
 
+    <servlet>
+        <servlet-name>CartServlet</servlet-name>
+        <servlet-class>com.epam.library.servletsTwo.CartServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>CartServlet</servlet-name>
+        <url-pattern>/cartServlet</url-pattern>
+    </servlet-mapping>
 
+    <servlet>
+        <servlet-name>CreateOrderServlet</servlet-name>
+        <servlet-class>com.epam.library.servletsTwo.CreateOrderServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>CreateOrderServlet</servlet-name>
+        <url-pattern>/createOrderServlet</url-pattern>
+    </servlet-mapping>
 
+    <servlet>
+        <servlet-name>PrepareCartToOrderServlet</servlet-name>
+        <servlet-class>com.epam.library.servletsTwo.PrepareCartToOrderServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>PrepareCartToOrderServlet</servlet-name>
+        <url-pattern>/prepareCartToOrderServlet</url-pattern>
+    </servlet-mapping>
 
 
 
