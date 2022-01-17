@@ -16,6 +16,7 @@ public class OrderMapper implements MapperToObject<Order> {
         order.setCreationDate(resultSet.getDate("date_of_creation"));
         order.setExpirationDate(resultSet.getDate("expiration_date"));
         order.setPlaceOfReadingId(resultSet.getInt("place_of_reading_id"));
+        order.setCartId(resultSet.getInt("cart_id"));
         order.setActive(resultSet.getBoolean("active"));
         return order;
 

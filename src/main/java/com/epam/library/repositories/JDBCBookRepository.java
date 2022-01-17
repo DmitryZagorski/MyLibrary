@@ -15,7 +15,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-public class JDBCBookRepository extends AbstractCRUDRepository<Book>{
+public class JDBCBookRepository extends AbstractCRUDRepository<Book> {
 
     private static final Logger Log = LoggerFactory.getLogger(JDBCBookRepository.class);
 
@@ -111,6 +111,25 @@ public class JDBCBookRepository extends AbstractCRUDRepository<Book>{
         }
     }
 
+    public Book getBookByTitle(String title) {
+        String getBookByTitle = "select * from books where title = '".concat(title).concat("'");
+        try (Connection connection = ConnectionPoolProvider.getConnection();
+             Statement statement = connection.createStatement()) {
+            ResultSet resultSet = statement.executeQuery(getBookByTitle);
+            Book book = new Book();
+            if (resultSet.next()) {
+                book.setId(resultSet.getInt("id"));
+                book.setTitle(resultSet.getString("title"));
+                book.setAuthor(resultSet.getString("author"));
+                book.setGenreId(resultSet.getInt("genre_id"));
+            }
+            return book;
+        } catch (SQLException e) {
+            Log.error("Some error during getting book by title=" + title, e);
+            throw new BookNotFoundException(title, e);
+        }
+    }
+
     public List<Book> getBooksByAuthor(String author) {
         String getBookByAuthor = "select * from books where author=".concat(author);
         try (Connection connection = ConnectionPoolProvider.getConnection();
@@ -143,13 +162,13 @@ public class JDBCBookRepository extends AbstractCRUDRepository<Book>{
         }
     }
 
-    public List<Genre1> getAllGenres(){
+    public List<Genre1> getAllGenres() {
         String findAllGenres = "select * from genres";
-        try(Connection connection = ConnectionPoolProvider.getConnection();
-            Statement statement = connection.createStatement()){
+        try (Connection connection = ConnectionPoolProvider.getConnection();
+             Statement statement = connection.createStatement()) {
             ResultSet resultSet = statement.executeQuery(findAllGenres);
             List<Genre1> genres = new ArrayList<>();
-            while(resultSet.next()){
+            while (resultSet.next()) {
                 Genre1 genre1 = new Genre1();
                 genre1.setId(resultSet.getInt("id"));
                 genre1.setTitle(resultSet.getString("title"));

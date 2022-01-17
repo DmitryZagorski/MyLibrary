@@ -1,6 +1,8 @@
 package com.epam.library.servletsTwo;
 
+import com.epam.library.models.Book;
 import com.epam.library.models.Catalog;
+import com.epam.library.repositories.JDBCBookRepository;
 import com.epam.library.repositories.JDBCCatalogRepository;
 
 import javax.servlet.ServletException;
@@ -19,10 +21,14 @@ public class CatalogServlet extends HttpServlet {
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
-        List<Catalog> allWithJoin = JDBCCatalogRepository.getInstance().findAllWithJoin();
+        //List<Catalog> allWithJoin = JDBCCatalogRepository.getInstance().findAllWithJoinWithBookId();
+        List<Catalog> allWithJoin = JDBCCatalogRepository.getInstance().findAllWithJoinWithBookTitle();
         request.setAttribute("allCatalog", allWithJoin);
-        request.getRequestDispatcher("/catalog.jsp").forward(request, response);
 
+        List<Book> allBooks = JDBCBookRepository.getInstance().findAll();
+        request.setAttribute("allBooks", allBooks);
+
+        request.getRequestDispatcher("/catalog.jsp").forward(request, response);
 
     }
 }

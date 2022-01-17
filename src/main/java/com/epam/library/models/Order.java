@@ -11,6 +11,7 @@ public class Order {
     private Date creationDate;
     private Date expirationDate;
     private int placeOfReadingId;
+    private int cartId;
     private boolean active;
 
     public int getId() {
@@ -61,6 +62,14 @@ public class Order {
         this.placeOfReadingId = placeOfReadingId;
     }
 
+    public int getCartId() {
+        return cartId;
+    }
+
+    public void setCartId(int cartId) {
+        this.cartId = cartId;
+    }
+
     public boolean isActive() {
         return active;
     }
@@ -77,27 +86,15 @@ public class Order {
         return id == order.id &&
                 totalQuantity == order.totalQuantity &&
                 customerId == order.customerId &&
+                placeOfReadingId == order.placeOfReadingId &&
+                cartId == order.cartId &&
                 active == order.active &&
                 Objects.equals(creationDate, order.creationDate) &&
-                Objects.equals(expirationDate, order.expirationDate) &&
-                Objects.equals(placeOfReadingId, order.placeOfReadingId);
+                Objects.equals(expirationDate, order.expirationDate);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, totalQuantity, customerId, creationDate, expirationDate, placeOfReadingId, active);
-    }
-
-    @Override
-    public String toString() {
-        return "Order{" +
-                "id=" + id +
-                ", totalQuantity=" + totalQuantity +
-                ", customerId=" + customerId +
-                ", creationDate=" + creationDate +
-                ", expirationDate=" + expirationDate +
-                ", placeOfReadingId=" + placeOfReadingId +
-                ", active=" + active +
-                '}';
+        return Objects.hash(id, totalQuantity, customerId, creationDate, expirationDate, placeOfReadingId, cartId, active);
     }
 }

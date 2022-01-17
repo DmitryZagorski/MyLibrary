@@ -32,35 +32,35 @@ public class CreateOrderServlet extends HttpServlet {
 //        String custId = request.getParameter("customerId");
 //        Integer customerId = Integer.valueOf(custId);
 
-        Customer customer = (Customer) request.getSession().getAttribute("customer");
-        Integer customerId = null;
-        if (customer == null){
-            Log.info("To create an order you have to sign in or to sign up");
-        }
-        else customerId = customer.getId();
-
-        try {
-            int totalQuantity = 0;
-            JDBCCartRepository cartInstance = JDBCCartRepository.getInstance();
-            List<Cart> customerCart = cartInstance.getCartByCustomerId(customerId);
-            for (Cart cart : customerCart) {
-                totalQuantity += cart.getBookQuantity();
-            }
-
-            Calendar calendar = Calendar.getInstance();
-            Date creationDate = (Date) calendar.getTime();
-            Date expirationDate = (Date) calendar.getTime();
-
-
-            String placeOfReading = request.getParameter("place");
-            Integer placeOfReadingId = Integer.valueOf(placeOfReading);
-
-
-            request.getRequestDispatcher("/order.jsp").forward(request, response);
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
+//        Customer customer = (Customer) request.getSession().getAttribute("customer");
+//        Integer customerId = null;
+//        if (customer == null){
+//            Log.info("To create an order you have to sign in or to sign up");
+//        }
+//        else customerId = customer.getId();
+//
+//        try {
+//            int totalQuantity = 0;
+//            JDBCCartRepository cartInstance = JDBCCartRepository.getInstance();
+//            List<Cart> customerCart = cartInstance.getCartByCustomerId(customerId);
+//            for (Cart cart : customerCart) {
+//                totalQuantity += cart.getBookQuantity();
+//            }
+//
+//            Calendar calendar = Calendar.getInstance();
+//            Date creationDate = (Date) calendar.getTime();
+//            Date expirationDate = (Date) calendar.getTime();
+//
+//
+//            String placeOfReading = request.getParameter("place");
+//            Integer placeOfReadingId = Integer.valueOf(placeOfReading);
+//
+//
+//            request.getRequestDispatcher("/order.jsp").forward(request, response);
+//
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
+//
     }
 }

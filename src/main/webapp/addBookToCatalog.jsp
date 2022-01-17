@@ -33,11 +33,10 @@
                     <td>${book.genreId}</td>
                     <td>
                     <form action="/addBookToCatalogServlet">
-                        <label for="quantity">BookId</label><br>
-                        <input type="text" id="id" name="bookId" value="${book.id}"><br>
+                        <label for="bookId">BookId</label><br>
+                        <input type="text" id="bookId" name="bookId" value="${book.id}"><br>
                         <label for="quantity">Quantity</label><br>
                         <input type="text" id="quantity" name="quantity"><br>
-
                         <input type="submit" value="Add book to catalog">
                     </form>
                     </td>

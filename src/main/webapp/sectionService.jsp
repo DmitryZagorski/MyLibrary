@@ -38,20 +38,6 @@
                     <input class="send_btn" type="submit" value="Edit book">
                 </div>
             </form>
-            <form action="AddBookToCatalogServlet">
-                <div class="col-sm-12">
-                    <input class="send_btn" type="submit" value="Add book to catalog">
-                </div>
-            </form>
-
-
-            <h1> Orders</h1>
-
-            <form action="">
-                <div class="col-sm-12">
-                    <input class="send_btn" type="submit" value="View all orders">
-                </div>
-            </form>
 
             <h1> Catalog</h1>
 
@@ -71,6 +57,14 @@
             <form action="cartServlet">
                 <div class="col-sm-12">
                     <input class="send_btn" type="submit" value="View all cart">
+                </div>
+            </form>
+
+            <h1> Orders</h1>
+
+            <form action="">
+                <div class="col-sm-12">
+                    <input class="send_btn" type="submit" value="View all orders">
                 </div>
             </form>
 

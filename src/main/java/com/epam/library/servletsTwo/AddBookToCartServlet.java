@@ -2,10 +2,12 @@ package com.epam.library.servletsTwo;
 
 import com.epam.library.models.Book;
 import com.epam.library.models.Cart;
+import com.epam.library.models.CartBook;
 import com.epam.library.models.Customer;
 import com.epam.library.repositories.JDBCBookRepository;
 import com.epam.library.repositories.JDBCCartRepository;
 import com.epam.library.repositories.JDBCCustomerRepository;
+import com.epam.library.service.CartBookService;
 import com.epam.library.service.CartService;
 
 import javax.servlet.ServletException;
@@ -14,6 +16,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.List;
 
 @WebServlet(name = "addBookToCartServlet")
@@ -24,42 +27,52 @@ public class AddBookToCartServlet extends HttpServlet {
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
+        Customer customer = (Customer) request.getSession().getAttribute("customer");
+        int customerId = 0;
+        if (customer == null){
+            response.setContentType("text/html");
+            PrintWriter out = response.getWriter();
+            out.println("<html>");
+            out.println("<head>");
+            out.println("<p> You have to sign in or sign up to add books to cart </p>");
+            out.println("</head>");
+            out.println("</html>");
+        }
+        else{
+            customerId = customer.getId();
+        }
+
         String bookTitle = request.getParameter("bookTitle");
+        Book bookByTitle = JDBCBookRepository.getInstance().getBookByTitle(bookTitle);
+        int bookId = bookByTitle.getId();
+
         List<Book> allBooks = JDBCBookRepository.getInstance().findAll();
-        int bookId = 0;
         for (Book book : allBooks) {
-            if (book.getTitle().equalsIgnoreCase(bookTitle)) {
+            if (book.getId()==bookId) {
                 bookId = book.getId();
             }
         }
+
         String bookQuan = request.getParameter("freeQuantity");
-        Integer bookQuantity = Integer.valueOf(bookQuan);
-        Customer customer = (Customer) request.getSession().getAttribute("customer");
-        Integer customerId = customer.getId();
-        String ordId = request.getParameter("orderId");
-        Integer orderId;
-        if (ordId == null) {
-            orderId = null;
-        } else orderId = Integer.valueOf(ordId);
+        int bookQuantity = Integer.parseInt(bookQuan);
 
         try {
-            Cart cart;
-            if (orderId == null) {
-                cart = CartService.getInstance().addBookToCartWithoutOrder(bookId, bookQuantity, customerId);
-            } else {
-                cart = CartService.getInstance().addBookToCart(bookId, bookQuantity, customerId, orderId);
-            }
+
+            JDBCCartRepository.getInstance().removeAll();
 
             Customer customerById = JDBCCustomerRepository.getInstance().getById(customerId);
             String customerLogin = customerById.getLogin();
-
             request.setAttribute("customerLogin", customerLogin);
+
+            Cart cart = CartService.getInstance().addCart(customerId);
+            int cartId = JDBCCartRepository.getInstance().getCartIdByCustomerId(customerId);
+            CartBookService.getInstance().addCartBook(bookId, bookQuantity, cartId);
 
             request.setAttribute("addedId", cart.getId());
             request.setAttribute("addedBookTitle", bookTitle);
 
-            List<Cart> allCart = JDBCCartRepository.getInstance().getCartByCustomerId(customerId);
-            request.setAttribute("allCart", allCart);
+//            List<Cart> allCart = JDBCCartRepository.getInstance().getCartByCustomerId(customerId);
+//            request.setAttribute("allCart", allCart);
 
             request.getRequestDispatcher("/catalogServlet").forward(request, response);
         } catch (ServletException | IOException e) {

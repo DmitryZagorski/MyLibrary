@@ -3,6 +3,8 @@ package com.epam.library.servletsTwo;
 import com.epam.library.models.Customer;
 import com.epam.library.models.PersonRole;
 import com.epam.library.repositories.JDBCCustomerRepository;
+import com.epam.library.repositories.JDBCOrderRepository;
+import com.epam.library.service.CartService;
 import com.epam.library.service.CustomerService;
 
 import javax.servlet.ServletException;
@@ -22,8 +24,6 @@ public class AddCustomerServlet extends HttpServlet {
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
-//        String custID = request.getParameter("customerId");
-//        Integer customerId = Integer.valueOf(custID);
         String name = request.getParameter("name");
         String surname = request.getParameter("surname");
         String address = request.getParameter("address");
@@ -32,12 +32,15 @@ public class AddCustomerServlet extends HttpServlet {
         String login = request.getParameter("login");
         String password = request.getParameter("password");
 
-
         try {
             CustomerService customerService = CustomerService.getInstance();
 
             Customer customer = customerService.registerCustomer(name, surname, address, email, dateOfSignUp, PersonRole.Customer, Boolean.FALSE, login, password);
             request.setAttribute("addedId", customer.getId());
+
+            int customerId = JDBCCustomerRepository.getInstance().findLastIdOfCustomer();
+
+            CartService.getInstance().addCart(customerId);
 
             request.getRequestDispatcher("allCustomersServlet").forward(request, response);
 

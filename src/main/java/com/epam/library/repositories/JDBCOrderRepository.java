@@ -54,8 +54,8 @@ public class JDBCOrderRepository extends AbstractCRUDRepository<Order> {
     }
 
     public Order addOrder(Order order) {
-        String insertOrderSQL = "insert into orders (total_quantity, customer_id, date_of_creation, expiration_date, place_of_reading_id, active) values (?,?,?,?,?,?)";
-        String updateOrderSQL = "update catalog set total_quantity = ?, customer_id = ?, date_of_creation = ?, expiration_date = ?, place_of_reading_id = ?, active = ? where id = ?";
+        String insertOrderSQL = "insert into orders (total_quantity, customer_id, date_of_creation, expiration_date, place_of_reading_id, cart_id, active) values (?,?,?,?,?,?,?)";
+        String updateOrderSQL = "update catalog set total_quantity = ?, customer_id = ?, date_of_creation = ?, expiration_date = ?, place_of_reading_id = ?, cart_id = ?, active = ? where id = ?";
         PreparedStatement prStatement = null;
         try (Connection connection = ConnectionPoolProvider.getConnection()) {
             if (order.getId() == 0) {
@@ -65,7 +65,7 @@ public class JDBCOrderRepository extends AbstractCRUDRepository<Order> {
             }
             setOrderValues(order, prStatement);
             if (order.getId() != 0) {
-                prStatement.setInt(7, order.getId());
+                prStatement.setInt(8, order.getId());
             }
             int result = prStatement.executeUpdate();
             if (result != 1) {
@@ -90,21 +90,21 @@ public class JDBCOrderRepository extends AbstractCRUDRepository<Order> {
         }
     }
 
-    public Integer findLastIdOfOrder() {
-        String selectLastId = "SELECT id FROM orders ORDER BY id DESC LIMIT 1";
-        try (Connection connection = ConnectionPoolProvider.getConnection();
-             Statement statement = connection.createStatement();
-             ResultSet resultSet = statement.executeQuery(selectLastId)) {
-            Integer id = null;
-            if (resultSet.next()) {
-                id = resultSet.getInt("id");
-            }
-            return id;
-        } catch (SQLException e) {
-            Log.error("Something wrong during retrieval id from order ", e);
-            throw new EntityRerievalException(e);
-        }
-    }
+//    public Integer findLastIdOfOrder() {
+//        String selectLastId = "SELECT id FROM orders ORDER BY id DESC LIMIT 1";
+//        try (Connection connection = ConnectionPoolProvider.getConnection();
+//             Statement statement = connection.createStatement();
+//             ResultSet resultSet = statement.executeQuery(selectLastId)) {
+//            Integer id = null;
+//            if (resultSet.next()) {
+//                id = resultSet.getInt("id");
+//            }
+//            return id;
+//        } catch (SQLException e) {
+//            Log.error("Something wrong during retrieval id from order ", e);
+//            throw new EntityRerievalException(e);
+//        }
+//    }
 
     private void setOrderValues(Order order, PreparedStatement prStatement) throws SQLException {
         prStatement.setInt(1, order.getTotalQuantity());
@@ -112,7 +112,8 @@ public class JDBCOrderRepository extends AbstractCRUDRepository<Order> {
         prStatement.setDate(3, order.getCreationDate());
         prStatement.setDate(4, order.getExpirationDate());
         prStatement.setInt(5, order.getPlaceOfReadingId());
-        prStatement.setBoolean(6, order.isActive());
+        prStatement.setInt(6, order.getCartId());
+        prStatement.setBoolean(7, order.isActive());
     }
 
 }

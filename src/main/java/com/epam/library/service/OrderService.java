@@ -28,13 +28,14 @@ public class OrderService {
         return instance;
     }
 
-    public Order addOrder(int totalQuantity, int customerId, Date creationDate, Date expirationDate, int placeOfReadingId, boolean active){
+    public Order addOrder(int totalQuantity, int customerId, Date creationDate, Date expirationDate, int placeOfReadingId, int cartId, boolean active){
         Order order = new Order();
         order.setTotalQuantity(totalQuantity);
         order.setCustomerId(customerId);
         order.setCreationDate(creationDate);
         order.setExpirationDate(expirationDate);
         order.setPlaceOfReadingId(placeOfReadingId);
+        order.setCartId(cartId);
         order.setActive(active);
         return JDBCOrderRepository.getInstance().addOrder(order);
     }

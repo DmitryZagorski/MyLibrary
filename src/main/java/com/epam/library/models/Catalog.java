@@ -56,23 +56,13 @@ public class Catalog {
         if (o == null || getClass() != o.getClass()) return false;
         Catalog catalog = (Catalog) o;
         return id == catalog.id &&
+                bookId == catalog.bookId &&
                 totalQuantity == catalog.totalQuantity &&
-                freeQuantity == catalog.freeQuantity &&
-                Objects.equals(bookTitle, catalog.bookTitle);
+                freeQuantity == catalog.freeQuantity;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, bookTitle, totalQuantity, freeQuantity);
-    }
-
-    @Override
-    public String toString() {
-        return "Catalog{" +
-                "id=" + id +
-                ", bookTitle='" + bookTitle + '\'' +
-                ", totalQuantity=" + totalQuantity +
-                ", freeQuantity=" + freeQuantity +
-                '}';
+        return Objects.hash(id, bookId, totalQuantity, freeQuantity);
     }
 }

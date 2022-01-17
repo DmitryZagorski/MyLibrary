@@ -71,7 +71,49 @@ public class JDBCCatalogRepository extends AbstractCRUDRepository<Catalog> {
         }
     }
 
-    public List<Catalog> findAllWithJoin() {
+//    public List<Catalog> findAllWithJoin() {
+//        String findAllWithJoin = "select catalog.id, books.title, catalog.total_quantity, catalog.free_quantity from catalog inner join books on catalog.book_id = books.id";
+//        try (Connection connection = ConnectionPoolProvider.getConnection();
+//             Statement statement = connection.createStatement();
+//             ResultSet resultSet = statement.executeQuery(findAllWithJoin)) {
+//            List<Catalog> catalog = new ArrayList<>();
+//            while (resultSet.next()) {
+//                Catalog cat = new Catalog();
+//                cat.setId(resultSet.getInt("id"));
+//                cat.setBookTitle(resultSet.getString("title"));
+//                cat.setTotalQuantity(resultSet.getInt("total_quantity"));
+//                cat.setFreeQuantity(resultSet.getInt("free_quantity"));
+//                catalog.add(cat);
+//            }
+//            return catalog;
+//        } catch (SQLException e) {
+//            Log.error("Something wrong during retrieval entity ", e);
+//            throw new EntityRerievalException(e);
+//        }
+//    }
+
+    public List<Catalog> findAllWithJoinWithBookId() {
+        String findAllWithJoin = "select catalog.id, catalog.book_id, catalog.total_quantity, catalog.free_quantity from catalog inner join books on catalog.book_id = books.id";
+        try (Connection connection = ConnectionPoolProvider.getConnection();
+             Statement statement = connection.createStatement();
+             ResultSet resultSet = statement.executeQuery(findAllWithJoin)) {
+            List<Catalog> catalog = new ArrayList<>();
+            while (resultSet.next()) {
+                Catalog cat = new Catalog();
+                cat.setId(resultSet.getInt("id"));
+                cat.setBookId(resultSet.getInt("book_id"));
+                cat.setTotalQuantity(resultSet.getInt("total_quantity"));
+                cat.setFreeQuantity(resultSet.getInt("free_quantity"));
+                catalog.add(cat);
+            }
+            return catalog;
+        } catch (SQLException e) {
+            Log.error("Something wrong during retrieval entity ", e);
+            throw new EntityRerievalException(e);
+        }
+    }
+
+    public List<Catalog> findAllWithJoinWithBookTitle() {
         String findAllWithJoin = "select catalog.id, books.title, catalog.total_quantity, catalog.free_quantity from catalog inner join books on catalog.book_id = books.id";
         try (Connection connection = ConnectionPoolProvider.getConnection();
              Statement statement = connection.createStatement();
@@ -126,6 +168,34 @@ public class JDBCCatalogRepository extends AbstractCRUDRepository<Catalog> {
                     throw new EntitySavingException(e);
                 }
             }
+        }
+    }
+
+    public void updateTotalQuantityOfBook(int bookId, int quantity){
+        String updateQuantity = "update catalog set total_quantity = ".concat(String.valueOf(quantity)).concat(" where book_id = ").concat(String.valueOf(bookId));
+        try (Connection connection = ConnectionPoolProvider.getConnection();
+             Statement statement = connection.createStatement()) {
+            int i = statement.executeUpdate(updateQuantity);
+            if (i!=1){
+                Log.info("Quantity wasn't updated");
+            }
+        } catch (SQLException e) {
+            Log.error("Something wrong during retrieval entity ", e);
+            throw new EntityRerievalException(e);
+        }
+    }
+
+    public void updateFreeQuantityOfBook(int bookId, int quantity){
+        String updateQuantity = "update 'catalog' set free_quantity = ".concat(String.valueOf(quantity)).concat(" where book_id = ").concat(String.valueOf(bookId));
+        try (Connection connection = ConnectionPoolProvider.getConnection();
+             Statement statement = connection.createStatement()) {
+            int i = statement.executeUpdate(updateQuantity);
+            if (i!=1){
+                Log.info("Quantity wasn't updated");
+            }
+        } catch (SQLException e) {
+            Log.error("Something wrong during retrieval entity ", e);
+            throw new EntityRerievalException(e);
         }
     }
 

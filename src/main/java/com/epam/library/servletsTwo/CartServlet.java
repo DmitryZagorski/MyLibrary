@@ -1,8 +1,10 @@
 package com.epam.library.servletsTwo;
 
 import com.epam.library.models.Cart;
+import com.epam.library.models.CartBook;
 import com.epam.library.models.Customer;
 import com.epam.library.models.PlaceOfReading;
+import com.epam.library.repositories.JDBCCartBookRepository;
 import com.epam.library.repositories.JDBCCartRepository;
 import com.epam.library.repositories.JDBCCustomerRepository;
 import com.epam.library.repositories.JDBCPlaceOfReading;
@@ -37,8 +39,12 @@ public class CartServlet extends HttpServlet {
                 Customer customerById = JDBCCustomerRepository.getInstance().getById(customerId);
                 String customerLogin = customerById.getLogin();
                 request.setAttribute("customerLogin", customerLogin);
-                List<Cart> allCart = JDBCCartRepository.getInstance().findAll();
-                request.setAttribute("allCart", allCart);
+
+                Integer cartIdByCustomerId = JDBCCartRepository.getInstance().getCartIdByCustomerId(customerId);
+
+                List<CartBook> booksInCart = JDBCCartBookRepository.getInstance().findAllWithJoinByCartId(cartIdByCustomerId);
+
+                request.setAttribute("allCart", booksInCart);
                 List<PlaceOfReading> allPlaces = JDBCPlaceOfReading.getInstance().findAll();
                 request.setAttribute("allPlaces", allPlaces);
 

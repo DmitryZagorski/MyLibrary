@@ -130,6 +130,22 @@ public class JDBCCustomerRepository extends AbstractCRUDRepository<Customer> {
         }
     }
 
+    public Integer findLastIdOfCustomer() {
+        String selectLastId = "select id from cusomers ORDER BY id DESC LIMIT 1";
+        try (Connection connection = ConnectionPoolProvider.getConnection();
+             Statement statement = connection.createStatement();
+             ResultSet resultSet = statement.executeQuery(selectLastId)) {
+            Integer id = null;
+            if (resultSet.next()) {
+                id = resultSet.getInt("id");
+            }
+            return id;
+        } catch (SQLException e) {
+            Log.error("Something wrong during retrieval id from customer ", e);
+            throw new CustomerException(e);
+        }
+    }
+
     private void setCustomerValues(Customer customer, PreparedStatement prStatement) throws SQLException {
         prStatement.setString(1, customer.getName());
         prStatement.setString(2, customer.getSurname());

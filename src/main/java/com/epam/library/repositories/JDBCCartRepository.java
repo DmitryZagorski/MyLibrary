@@ -1,12 +1,15 @@
 package com.epam.library.repositories;
 
 import com.epam.library.connections.ConnectionPoolProvider;
+import com.epam.library.exceptions.BookNotFoundException;
+import com.epam.library.exceptions.CartException;
 import com.epam.library.exceptions.EntityRerievalException;
 import com.epam.library.exceptions.EntitySavingException;
 import com.epam.library.models.Book;
 import com.epam.library.models.Cart;
 import com.epam.library.models.Catalog;
 import com.epam.library.repositories.AbstractCRUDRepository;
+import com.epam.library.repositories.mapping.BookMapper;
 import com.epam.library.repositories.mapping.BookPictureMapper;
 import com.epam.library.repositories.mapping.CartMapper;
 import org.slf4j.Logger;
@@ -59,9 +62,9 @@ public class JDBCCartRepository extends AbstractCRUDRepository<Cart> {
         super.removeAll();
     }
 
-    public Cart addBookToCart(Cart cart) {
-        String insertBookSQL = "insert into cart (book_id, book_quantity, customer_id, order_id) values (?,?,?,?)";
-        String updateBookSQL = "update catalog set book_id = ?, book_quantity = ?, customer_id = ?, order_id=? where id = ?";
+    public Cart addCart(Cart cart) {
+        String insertBookSQL = "insert into cart (customer_id) values (?)";
+        String updateBookSQL = "update catalog set customer_id = ? where id = ?";
         PreparedStatement prStatement = null;
         try (Connection connection = ConnectionPoolProvider.getConnection()) {
             if (cart.getId() == 0) {
@@ -71,11 +74,11 @@ public class JDBCCartRepository extends AbstractCRUDRepository<Cart> {
             }
             setCartValues(cart, prStatement);
             if (cart.getId() != 0) {
-                prStatement.setInt(5, cart.getId());
+                prStatement.setInt(1, cart.getId());
             }
             int result = prStatement.executeUpdate();
             if (result != 1) {
-                throw new EntitySavingException("Book was not saved to cart!");
+                throw new EntitySavingException("Cart was not saved!");
             }
             ResultSet generatedKey = prStatement.getGeneratedKeys();
             if (generatedKey.next()) {
@@ -83,7 +86,7 @@ public class JDBCCartRepository extends AbstractCRUDRepository<Cart> {
             }
             return cart;
         } catch (SQLException e) {
-            Log.error("Something wrong during saving book to cart", e);
+            Log.error("Something wrong during adding cart", e);
             throw new EntitySavingException(e);
         } finally {
             if (prStatement != null) {
@@ -96,66 +99,116 @@ public class JDBCCartRepository extends AbstractCRUDRepository<Cart> {
         }
     }
 
-    public Cart addBookToCartWithoutOrder(Cart cart) {
-        String insertBookSQL = "insert into cart (book_id, book_quantity, customer_id) values (?,?,?)";
-        String updateBookSQL = "update catalog set book_id = ?, book_quantity = ?, customer_id = ? where id = ?";
-        PreparedStatement prStatement = null;
-        try (Connection connection = ConnectionPoolProvider.getConnection()) {
-            if (cart.getId() == 0) {
-                prStatement = connection.prepareStatement(insertBookSQL, prStatement.RETURN_GENERATED_KEYS);
-            } else {
-                prStatement = connection.prepareStatement(updateBookSQL, prStatement.RETURN_GENERATED_KEYS);
-            }
-            setCartValuesWithoutOrder(cart, prStatement);
-            if (cart.getId() != 0) {
-                prStatement.setInt(4, cart.getId());
-            }
-            int result = prStatement.executeUpdate();
-            if (result != 1) {
-                throw new EntitySavingException("Book was not saved to cart!");
-            }
-            ResultSet generatedKey = prStatement.getGeneratedKeys();
-            if (generatedKey.next()) {
-                cart.setId(generatedKey.getInt(1));
-            }
-            return cart;
-        } catch (SQLException e) {
-            Log.error("Something wrong during saving book to cart", e);
-            throw new EntitySavingException(e);
-        } finally {
-            if (prStatement != null) {
-                try {
-                    prStatement.close();
-                } catch (SQLException e) {
-                    throw new EntitySavingException(e);
-                }
-            }
-        }
-    }
-
-    public void updateCartWithOrderId(int customerId, int orderId) {
-        String updateCart = "update 'cart' set 'order_id' = ".concat(String.valueOf(orderId)).concat(" where customer_id = ").concat(String.valueOf(customerId));
+    public Integer getCartIdByCustomerId(int customerId) {
+        String getCartByCustomerId = "select * from cart where customer_id=".concat(String.valueOf(customerId));
         try (Connection connection = ConnectionPoolProvider.getConnection();
-             PreparedStatement ps = connection.prepareStatement(updateCart)) {
-        ps.executeUpdate();
+             Statement statement = connection.createStatement()) {
+            ResultSet resultSet = statement.executeQuery(getCartByCustomerId);
+            Cart cart = new Cart();
+            if (resultSet.next()) {
+                cart.setId(resultSet.getInt("id"));
+            }
+            return cart.getId();
         } catch (SQLException e) {
-            Log.error("Something wrong during updating cart with orderID");
-            throw new EntitySavingException(e);
+            Log.error("Error during getting cartId by customerId=" + customerId, e);
+            throw new CartException(e);
         }
     }
+
+//    public Cart addBookToCart(Cart cart) {
+//        String insertBookSQL = "insert into cart (customer_id) values (?)";
+//        String updateBookSQL = "update catalog set customer_id = ? where id = ?";
+//        PreparedStatement prStatement = null;
+//        try (Connection connection = ConnectionPoolProvider.getConnection()) {
+//            if (cart.getId() == 0) {
+//                prStatement = connection.prepareStatement(insertBookSQL, prStatement.RETURN_GENERATED_KEYS);
+//            } else {
+//                prStatement = connection.prepareStatement(updateBookSQL, prStatement.RETURN_GENERATED_KEYS);
+//            }
+//            setCartValues(cart, prStatement);
+//            if (cart.getId() != 0) {
+//                prStatement.setInt(1, cart.getId());
+//            }
+//            int result = prStatement.executeUpdate();
+//            if (result != 1) {
+//                throw new EntitySavingException("Book was not saved to cart!");
+//            }
+//            ResultSet generatedKey = prStatement.getGeneratedKeys();
+//            if (generatedKey.next()) {
+//                cart.setId(generatedKey.getInt(1));
+//            }
+//            return cart;
+//        } catch (SQLException e) {
+//            Log.error("Something wrong during saving book to cart", e);
+//            throw new EntitySavingException(e);
+//        } finally {
+//            if (prStatement != null) {
+//                try {
+//                    prStatement.close();
+//                } catch (SQLException e) {
+//                    throw new EntitySavingException(e);
+//                }
+//            }
+//        }
+//    }
+
+//    public Cart addBookToCartWithoutOrder(Cart cart) {
+//        String insertBookSQL = "insert into cart (book_id, book_quantity, customer_id) values (?,?,?)";
+//        String updateBookSQL = "update catalog set book_id = ?, book_quantity = ?, customer_id = ? where id = ?";
+//        PreparedStatement prStatement = null;
+//        try (Connection connection = ConnectionPoolProvider.getConnection()) {
+//            if (cart.getId() == 0) {
+//                prStatement = connection.prepareStatement(insertBookSQL, prStatement.RETURN_GENERATED_KEYS);
+//            } else {
+//                prStatement = connection.prepareStatement(updateBookSQL, prStatement.RETURN_GENERATED_KEYS);
+//            }
+//            setCartValuesWithoutOrder(cart, prStatement);
+//            if (cart.getId() != 0) {
+//                prStatement.setInt(4, cart.getId());
+//            }
+//            int result = prStatement.executeUpdate();
+//            if (result != 1) {
+//                throw new EntitySavingException("Book was not saved to cart!");
+//            }
+//            ResultSet generatedKey = prStatement.getGeneratedKeys();
+//            if (generatedKey.next()) {
+//                cart.setId(generatedKey.getInt(1));
+//            }
+//            return cart;
+//        } catch (SQLException e) {
+//            Log.error("Something wrong during saving book to cart", e);
+//            throw new EntitySavingException(e);
+//        } finally {
+//            if (prStatement != null) {
+//                try {
+//                    prStatement.close();
+//                } catch (SQLException e) {
+//                    throw new EntitySavingException(e);
+//                }
+//            }
+//        }
+//    }
+
+//    public void updateCartWithOrderId(int customerId, int orderId) {
+//        String updateCart = "update 'cart' set 'order_id' = ".concat(String.valueOf(orderId)).concat(" where customer_id = ").concat(String.valueOf(customerId));
+//        try (Connection connection = ConnectionPoolProvider.getConnection();
+//             PreparedStatement ps = connection.prepareStatement(updateCart)) {
+//        ps.executeUpdate();
+//        } catch (SQLException e) {
+//            Log.error("Something wrong during updating cart with orderID");
+//            throw new EntitySavingException(e);
+//        }
+//    }
 
     private void setCartValues(Cart cart, PreparedStatement prStatement) throws SQLException {
-        prStatement.setInt(1, cart.getBookId());
-        prStatement.setInt(2, cart.getBookQuantity());
-        prStatement.setInt(3, cart.getCustomerId());
-        prStatement.setInt(4, cart.getOrderId());
+        prStatement.setInt(1, cart.getCustomerId());
     }
 
-    private void setCartValuesWithoutOrder(Cart cart, PreparedStatement prStatement) throws SQLException {
-        prStatement.setInt(1, cart.getBookId());
-        prStatement.setInt(2, cart.getBookQuantity());
-        prStatement.setInt(3, cart.getCustomerId());
-    }
+//    private void setCartValuesWithoutOrder(Cart cart, PreparedStatement prStatement) throws SQLException {
+//        prStatement.setInt(1, cart.getBookId());
+//        prStatement.setInt(2, cart.getBookQuantity());
+//        prStatement.setInt(3, cart.getCustomerId());
+//    }
 
     public List<Cart> getCartByCustomerId(int customerId) {
         String getByCustomerId = "select * from cart where customer_id = %d";
@@ -165,10 +218,7 @@ public class JDBCCartRepository extends AbstractCRUDRepository<Cart> {
             List<Cart> cart = new ArrayList<>();
             while (resultSet.next()) {
                 Cart someCart = new Cart();
-                someCart.setBookId(resultSet.getInt("book_id"));
-                someCart.setBookQuantity(resultSet.getInt("book_quantity"));
                 someCart.setCustomerId(resultSet.getInt("customer_id"));
-                someCart.setOrderId(resultSet.getInt("order_id"));
                 cart.add(someCart);
             }
             return cart;

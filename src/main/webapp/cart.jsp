@@ -22,20 +22,23 @@
             <tr>
                 <th>Id</th>
                 <th>Book</th>
-                <th>Book Quantity</th>
-                <th>Customer</th>
-                <th>Order</th>
             </tr>
             <c:forEach items="${allCart}" var="cart">
                 <tr>
                     <td>${cart.id}</td>
                     <td>${cart.bookId}</td>
-                    <td>${cart.bookQuantity}</td>
-                    <td>${cart.customerId}</td>
-                    <td>${cart.orderId}</td>
                 </tr>
             </c:forEach>
         </table>
+
+        <c:forEach items="${allPlaces}" var="place">
+            <div class="col-md-12 ">
+                <input type="radio" id="${place.placeTitle}" name="place"
+                       value="${place.placeTitle}" checked> <label for="${place.placeTitle}">${place.placeTitle}</label>
+            </div>
+        </c:forEach>
+
+        <td><a href="/prepareCartToOrderServlet?place=${place}">Create order</a></td>
 
     </c:when>
     <c:otherwise>
@@ -43,17 +46,6 @@
     </c:otherwise>
 
 </c:choose>
-
-
-
-<c:forEach items="${allPlaces}" var="place">
-    <div class="col-md-12 ">
-        <input type="radio" id="${place.placeTitle}" name="place"
-               value="${place.placeTitle}" checked> <label for="${place.placeTitle}">${place.placeTitle}</label>
-    </div>
-</c:forEach>
-
-<td><a href="/prepareCartToOrderServlet?place=${place}">Create order</a></td>
 
 <c:if test="${addedId ne null}">Book ' ${addedBookTitle} ' was added successfully</c:if>
 

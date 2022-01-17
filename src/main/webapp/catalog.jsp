@@ -1,3 +1,4 @@
+<%@ page import="com.epam.library.repositories.JDBCBookRepository" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%--
   Created by IntelliJ IDEA.
@@ -23,6 +24,7 @@
                 <th>Free Quantity</th>
             </tr>
             <c:forEach items="${allCatalog}" var="catalog">
+
                 <tr>
                     <td>${catalog.id}</td>
                     <td>${catalog.bookTitle}</td>

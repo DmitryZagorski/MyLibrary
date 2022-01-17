@@ -29,26 +29,39 @@ public class AddBookToCatalogServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
         String bookID = request.getParameter("bookId");
-        Integer bookId = Integer.valueOf(bookID);
+        int bookId = Integer.parseInt(bookID);
         String totalQuantity = request.getParameter("quantity");
-        Integer totalQuantityInt = Integer.valueOf(totalQuantity);
+        int totalQuantityInt = Integer.parseInt(totalQuantity);
         String freeQuantity = request.getParameter("quantity");
-        Integer freeQuantityInt = Integer.valueOf(freeQuantity);
+        int freeQuantityInt = Integer.parseInt(freeQuantity);
 
         try {
+
             Book byId = JDBCBookRepository.getInstance().getById(bookId);
             String bookTitle = byId.getTitle();
-            Catalog catalog = new Catalog();
 
+            Catalog catalog = new Catalog();
             catalog.setBookId(bookId);
-            catalog.setBookTitle(bookTitle);
             catalog.setTotalQuantity(totalQuantityInt);
             catalog.setFreeQuantity(freeQuantityInt);
 
-            JDBCCatalogRepository.getInstance().addBookToCatalog(catalog);  //added at last
+            List<Catalog> allBooksInCatalog = JDBCCatalogRepository.getInstance().findAll();
+
+            boolean needToUpdate = false;
+            for (Catalog book : allBooksInCatalog) {
+                if (bookId == book.getBookId()) {
+                    needToUpdate = true;
+                    totalQuantityInt += book.getTotalQuantity();
+                }
+            }
+            if (needToUpdate) {
+                JDBCCatalogRepository.getInstance().updateTotalQuantityOfBook(bookId, totalQuantityInt);
+            } else {
+                JDBCCatalogRepository.getInstance().addBookToCatalog(catalog);
+            }
 
             request.setAttribute("addedId", catalog.getId());
-            request.setAttribute("addedBookTitle", catalog.getBookTitle());
+            request.setAttribute("addedBookTitle", bookTitle);
 
             request.getRequestDispatcher("/catalogServlet").forward(request, response);
         } catch (ServletException | IOException e) {
