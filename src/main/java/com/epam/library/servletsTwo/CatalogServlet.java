@@ -28,7 +28,8 @@ public class CatalogServlet extends HttpServlet {
         List<Book> allBooks = JDBCBookRepository.getInstance().findAll();
         request.setAttribute("allBooks", allBooks);
 
-        request.getRequestDispatcher("/catalog.jsp").forward(request, response);
+       // request.getRequestDispatcher("/catalog.jsp").forward(request, response);
+        request.getRequestDispatcher("/sectionCatalog.jsp").forward(request, response);
 
     }
 }

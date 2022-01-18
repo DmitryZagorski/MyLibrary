@@ -90,21 +90,21 @@ public class JDBCOrderRepository extends AbstractCRUDRepository<Order> {
         }
     }
 
-//    public Integer findLastIdOfOrder() {
-//        String selectLastId = "SELECT id FROM orders ORDER BY id DESC LIMIT 1";
-//        try (Connection connection = ConnectionPoolProvider.getConnection();
-//             Statement statement = connection.createStatement();
-//             ResultSet resultSet = statement.executeQuery(selectLastId)) {
-//            Integer id = null;
-//            if (resultSet.next()) {
-//                id = resultSet.getInt("id");
-//            }
-//            return id;
-//        } catch (SQLException e) {
-//            Log.error("Something wrong during retrieval id from order ", e);
-//            throw new EntityRerievalException(e);
-//        }
-//    }
+    public Integer findLastIdOfOrder() {
+        String selectLastId = "SELECT id FROM orders ORDER BY id DESC LIMIT 1";
+        try (Connection connection = ConnectionPoolProvider.getConnection();
+             Statement statement = connection.createStatement();
+             ResultSet resultSet = statement.executeQuery(selectLastId)) {
+            Integer id = null;
+            if (resultSet.next()) {
+                id = resultSet.getInt("id");
+            }
+            return id;
+        } catch (SQLException e) {
+            Log.error("Something wrong during retrieval id from order ", e);
+            throw new EntityRerievalException(e);
+        }
+    }
 
     private void setOrderValues(Order order, PreparedStatement prStatement) throws SQLException {
         prStatement.setInt(1, order.getTotalQuantity());

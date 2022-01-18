@@ -47,7 +47,7 @@
         <div class="responsive_menu">
             <ul>
                 <li><a class="show-1 templatemo_home" href="#">Home</a></li>
-                <li><a class="show-2 templatemo_page2" href="#">Catalog</a></li>
+                <li><a class="show-2 templatemo_page2" href="catalogServlet">Catalog</a></li>
                 <li><a class="show-3 templatemo_page3" href="#">Contact us</a></li>
                 <c:if test="${sessionScope.customer eq null}">
                     <li><a class="show-4 templatemo_page4" href="#">Sign in / Sign up</a></li>
@@ -68,7 +68,7 @@
                 <div class="col-md-12 main_menu">
                     <ul>
                         <li><a class="show-1 templatemo_home" href="#">Home</a></li>
-                        <li><a class="show-2 templatemo_page2" href="#">Catalog</a></li>
+                        <li><a class="show-2 templatemo_page2" href="catalogServlet">Catalog</a></li>
                         <li><a class="show-3 templatemo_page3" href="#">Contact us</a></li>
                         <c:if test="${sessionScope.customer eq null}">
                             <li><a class="show-4 templatemo_page4" href="#">Sign in / Sign up</a></li>
@@ -93,7 +93,7 @@
             <div class="col-md-12 text-center">
                 <form action="/searchServlet">
                     <form id="form" role="search">
-                        <input type="search" id="query" name="q"
+                        <input type="search" id="query" name="query"
                                placeholder="Search..."
                                aria-label="Search through site content">
                         <button>Search</button>
@@ -111,7 +111,7 @@
 
     <%@include file="/sectionHome.jsp" %>
 
-    <%@include file="/sectionCatalog.jsp" %>
+    <jsp:include page="/catalogServlet"/>
 
     <%@include file="/sectionContactUs.jsp" %>
 

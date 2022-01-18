@@ -58,7 +58,6 @@ public class AddBookToCartServlet extends HttpServlet {
 
         try {
 
-            JDBCCartRepository.getInstance().removeAll();
 
             Customer customerById = JDBCCustomerRepository.getInstance().getById(customerId);
             String customerLogin = customerById.getLogin();
@@ -66,6 +65,7 @@ public class AddBookToCartServlet extends HttpServlet {
 
             Cart cart = CartService.getInstance().addCart(customerId);
             int cartId = JDBCCartRepository.getInstance().getCartIdByCustomerId(customerId);
+
             CartBookService.getInstance().addCartBook(bookId, bookQuantity, cartId);
 
             request.setAttribute("addedId", cart.getId());

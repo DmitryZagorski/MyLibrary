@@ -1,14 +1,14 @@
-
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 <head>
-    <title>Catalog</title>
+    <title>Found book</title>
 </head>
 <body>
 
+
 <c:choose>
-    <c:when test="${allCatalog ne null}">
+    <c:when test="${foundBooks ne null}">
         <table>
             <tr>
                 <th>Id</th>
@@ -16,7 +16,7 @@
                 <th>Total Quantity</th>
                 <th>Free Quantity</th>
             </tr>
-            <c:forEach items="${allCatalog}" var="catalog">
+            <c:forEach items="${foundBooks}" var="catalog">
 
                 <tr>
                     <td>${catalog.id}</td>
@@ -30,11 +30,12 @@
         </table>
     </c:when>
     <c:otherwise>
-        <c:out value="Books not found in catalog"/>
+        <c:out value="Books not found"/>
     </c:otherwise>
 </c:choose>
 
 <c:if test="${addedId ne null}">Book ${addedBookTitle} was added successfully</c:if>
+
 
 </body>
 </html>

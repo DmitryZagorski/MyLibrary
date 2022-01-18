@@ -150,6 +150,23 @@
         <url-pattern>/prepareCartToOrderServlet</url-pattern>
     </servlet-mapping>
 
+    <servlet>
+        <servlet-name>RemoveCartBookServlet</servlet-name>
+        <servlet-class>com.epam.library.servletsTwo.RemoveCartBookServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>RemoveCartBookServlet</servlet-name>
+        <url-pattern>/removeCartBookServlet</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>SearchServlet</servlet-name>
+        <servlet-class>com.epam.library.servletsTwo.SearchServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>SearchServlet</servlet-name>
+        <url-pattern>/searchServlet</url-pattern>
+    </servlet-mapping>
 
 
 

@@ -6,6 +6,7 @@ public class OrderBook {
 
     private int id;
     private int bookId;
+    private String bookTitle;
     private int quantity;
     private int orderId;
 
@@ -15,6 +16,14 @@ public class OrderBook {
 
     public void setId(int id) {
         this.id = id;
+    }
+
+    public String getBookTitle() {
+        return bookTitle;
+    }
+
+    public void setBookTitle(String bookTitle) {
+        this.bookTitle = bookTitle;
     }
 
     public int getBookId() {

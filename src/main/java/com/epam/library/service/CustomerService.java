@@ -17,7 +17,6 @@ public class CustomerService {
 
     private static CustomerService instance;
 
-
     private CustomerService(){
 
         instance = this;

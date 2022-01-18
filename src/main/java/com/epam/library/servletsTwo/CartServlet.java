@@ -42,7 +42,8 @@ public class CartServlet extends HttpServlet {
 
                 Integer cartIdByCustomerId = JDBCCartRepository.getInstance().getCartIdByCustomerId(customerId);
 
-                List<CartBook> booksInCart = JDBCCartBookRepository.getInstance().findAllWithJoinByCartId(cartIdByCustomerId);
+                //List<CartBook> booksInCart = JDBCCartBookRepository.getInstance().findAllWithJoinByCartId(cartIdByCustomerId);
+                List<CartBook> booksInCart = JDBCCartBookRepository.getInstance().findAllWithTitleWithJoinByCartId(cartIdByCustomerId);
 
                 request.setAttribute("allCart", booksInCart);
                 List<PlaceOfReading> allPlaces = JDBCPlaceOfReading.getInstance().findAll();

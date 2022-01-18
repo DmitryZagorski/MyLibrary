@@ -6,6 +6,7 @@ public class CartBook {
 
     private int id;
     private int bookId;
+    private String bookTitle;
     private int quantity;
     private int cartId;
 
@@ -23,6 +24,14 @@ public class CartBook {
 
     public void setBookId(int bookId) {
         this.bookId = bookId;
+    }
+
+    public String getBookTitle() {
+        return bookTitle;
+    }
+
+    public void setBookTitle(String bookTitle) {
+        this.bookTitle = bookTitle;
     }
 
     public int getQuantity() {
@@ -46,13 +55,14 @@ public class CartBook {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         CartBook cartBook = (CartBook) o;
-        return bookId == cartBook.bookId &&
+        return id == cartBook.id &&
+                bookId == cartBook.bookId &&
                 quantity == cartBook.quantity &&
                 cartId == cartBook.cartId;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(bookId, quantity, cartId);
+        return Objects.hash(id, bookId, quantity, cartId);
     }
 }

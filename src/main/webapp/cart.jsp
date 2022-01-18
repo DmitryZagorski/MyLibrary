@@ -26,19 +26,25 @@
             <c:forEach items="${allCart}" var="cart">
                 <tr>
                     <td>${cart.id}</td>
-                    <td>${cart.bookId}</td>
+                    <td>${cart.bookTitle}</td>
+                    <td><a href="/removeCartBookServlet?cartId=${cart.id}">Remove book from cart</a></td>
                 </tr>
             </c:forEach>
         </table>
 
-        <c:forEach items="${allPlaces}" var="place">
-            <div class="col-md-12 ">
-                <input type="radio" id="${place.placeTitle}" name="place"
-                       value="${place.placeTitle}" checked> <label for="${place.placeTitle}">${place.placeTitle}</label>
-            </div>
-        </c:forEach>
-
-        <td><a href="/prepareCartToOrderServlet?place=${place}">Create order</a></td>
+        <form action="/prepareCartToOrderServlet" method="get">
+            <td>Place of reading:</td>
+            <br>
+            <c:forEach items="${allPlaces}" var="place">
+                <div class="col-md-12 text-center">
+                    <input type = "radio" id = ${place.placeTitle} name="placeTitle"
+                           value="${place.placeTitle}">${place.placeTitle}</input><br>
+                </div>
+            </c:forEach>
+            <br>
+            <input type="submit" value="Create order">
+            <br>
+        </form>
 
     </c:when>
     <c:otherwise>
@@ -46,6 +52,8 @@
     </c:otherwise>
 
 </c:choose>
+
+<c:if test="${removedId ne null}">Cart with id ${removedId} was removed successfully</c:if>
 
 <c:if test="${addedId ne null}">Book ' ${addedBookTitle} ' was added successfully</c:if>
 

@@ -6,6 +6,7 @@ import com.epam.library.exceptions.EntitySavingException;
 import com.epam.library.models.Book;
 import com.epam.library.models.Catalog;
 import com.epam.library.repositories.mapping.CatalogMapper;
+import com.epam.library.repositories.mapping.MapperToObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -71,26 +72,49 @@ public class JDBCCatalogRepository extends AbstractCRUDRepository<Catalog> {
         }
     }
 
-//    public List<Catalog> findAllWithJoin() {
-//        String findAllWithJoin = "select catalog.id, books.title, catalog.total_quantity, catalog.free_quantity from catalog inner join books on catalog.book_id = books.id";
-//        try (Connection connection = ConnectionPoolProvider.getConnection();
-//             Statement statement = connection.createStatement();
-//             ResultSet resultSet = statement.executeQuery(findAllWithJoin)) {
-//            List<Catalog> catalog = new ArrayList<>();
-//            while (resultSet.next()) {
-//                Catalog cat = new Catalog();
-//                cat.setId(resultSet.getInt("id"));
-//                cat.setBookTitle(resultSet.getString("title"));
-//                cat.setTotalQuantity(resultSet.getInt("total_quantity"));
-//                cat.setFreeQuantity(resultSet.getInt("free_quantity"));
-//                catalog.add(cat);
-//            }
-//            return catalog;
-//        } catch (SQLException e) {
-//            Log.error("Something wrong during retrieval entity ", e);
-//            throw new EntityRerievalException(e);
-//        }
-//    }
+    public Catalog getByBookId(int bookId) {
+        String getCatalogByBookId = "select * from catalog where book_id = ".concat(String.valueOf(bookId));
+        try (Connection connection = ConnectionPoolProvider.getConnection();
+             Statement statement = connection.createStatement();
+             ResultSet resultSet = statement.executeQuery(getCatalogByBookId)) {
+            if (resultSet.next()) {
+                Catalog cat = new Catalog();
+                cat.setId(resultSet.getInt("id"));
+                cat.setBookId(resultSet.getInt("book_id"));
+                cat.setTotalQuantity(resultSet.getInt("total_quantity"));
+                cat.setFreeQuantity(resultSet.getInt("free_quantity"));
+                return cat;
+            } else {
+                return null;
+            }
+        } catch (SQLException e) {
+            Log.error("Something wrong during retrieval by book_id ", e);
+            throw new EntityRerievalException();
+        }
+
+    }
+
+    public List<Catalog> getByIdWithJoin(int id) {
+        String getCatalogByBookId = "select catalog.id, books.title, catalog.total_quantity, catalog.free_quantity from catalog inner join books on catalog.book_id = books.id where book_id = ".concat(String.valueOf(id));
+        try (Connection connection = ConnectionPoolProvider.getConnection();
+             Statement statement = connection.createStatement();
+             ResultSet resultSet = statement.executeQuery(getCatalogByBookId)) {
+            List<Catalog> foundBooks = new ArrayList<>();
+            while (resultSet.next()) {
+                Catalog cat = new Catalog();
+                cat.setId(resultSet.getInt("id"));
+                cat.setBookTitle(resultSet.getString("title"));
+                cat.setTotalQuantity(resultSet.getInt("total_quantity"));
+                cat.setFreeQuantity(resultSet.getInt("free_quantity"));
+                foundBooks.add(cat);
+            }
+            return foundBooks;
+        } catch (SQLException e) {
+            Log.error("Something wrong during retrieval by book_id ", e);
+            throw new EntityRerievalException();
+        }
+    }
+
 
     public List<Catalog> findAllWithJoinWithBookId() {
         String findAllWithJoin = "select catalog.id, catalog.book_id, catalog.total_quantity, catalog.free_quantity from catalog inner join books on catalog.book_id = books.id";
@@ -185,8 +209,22 @@ public class JDBCCatalogRepository extends AbstractCRUDRepository<Catalog> {
         }
     }
 
-    public void updateFreeQuantityOfBook(int bookId, int quantity){
-        String updateQuantity = "update 'catalog' set free_quantity = ".concat(String.valueOf(quantity)).concat(" where book_id = ").concat(String.valueOf(bookId));
+    public void decreaseFreeQuantityOfBook(int bookId, int bookCurrentQuantity){
+        String updateQuantity = "update catalog set free_quantity = ".concat(String.valueOf(bookCurrentQuantity-1)).concat(" where book_id = ").concat(String.valueOf(bookId));
+        try (Connection connection = ConnectionPoolProvider.getConnection();
+             Statement statement = connection.createStatement()) {
+            int i = statement.executeUpdate(updateQuantity);
+            if (i!=1){
+                Log.info("Quantity wasn't updated");
+            }
+        } catch (SQLException e) {
+            Log.error("Something wrong during retrieval entity ", e);
+            throw new EntityRerievalException(e);
+        }
+    }
+
+    public void increaseFreeQuantityOfBook(int bookId, int bookCurrentQuantity){
+        String updateQuantity = "update catalog set free_quantity = ".concat(String.valueOf(bookCurrentQuantity+1)).concat(" where book_id = ").concat(String.valueOf(bookId));
         try (Connection connection = ConnectionPoolProvider.getConnection();
              Statement statement = connection.createStatement()) {
             int i = statement.executeUpdate(updateQuantity);
@@ -205,91 +243,3 @@ public class JDBCCatalogRepository extends AbstractCRUDRepository<Catalog> {
         prStatement.setInt(3, catalog.getFreeQuantity());
     }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
- /*
-
-    @Override
-    public Collection<Customer> getAllCustomers() {
-        String getAllCustomers = "select * from customers";
-        try (Connection connection = ConnectionPoolProvider.getConnection();
-             Statement statement = connection.createStatement();
-             ResultSet resultSet = statement.executeQuery(getAllCustomers)) {
-            List<Customer> customerList = new ArrayList<>();
-            while (resultSet.next()) {
-                customerList.add(getCustomer(resultSet));
-            }
-            return customerList;
-        } catch (SQLException e) {
-            Log.error("Some error during getting all customers", e);
-            throw new CustomerException(e);
-        }
-    }
-
-    @Override
-    public Collection<Book> getAllBooksInLibrary() {
-        String getAllBooks = "select * from books";
-        try (Connection connection = ConnectionPoolProvider.getConnection();
-             Statement statement = connection.createStatement()) {
-            ResultSet resultSet = statement.executeQuery(getAllBooks);
-            List<Book> books = new ArrayList<>();
-            while (resultSet.next()) {
-                books.add(getBook(resultSet));
-            }
-            return books;
-        } catch (SQLException e) {
-            Log.error("Some error during getting all books", e);
-            throw new BookException(e);
-        }
-    }
-
-    @Override
-    public Collection<Book> getFreeBooksInLibrary() {
-        String getFreeBooks = "select id, title, free_quantity from book_quantity where free_quantity>0 join inner books on book_id = books.id ";
-        try (Connection connection = ConnectionPoolProvider.getConnection();
-             Statement statement = connection.createStatement()) {
-            ResultSet resultSet = statement.executeQuery(getFreeBooks);
-            List<Book> freeBooks = new ArrayList<>();
-            while (resultSet.next()) {
-                freeBooks.add(getBook(resultSet));
-            }
-            return freeBooks;
-        } catch (SQLException e) {
-            Log.error("Some error during getting free books", e);
-            throw new BookException(e);
-        }
-    }
-
-    private Customer getCustomer(ResultSet resultSet) throws SQLException {
-        Customer customer = new Customer();
-        customer.setId(resultSet.getInt("id"));
-        customer.setName(resultSet.getString("name"));
-        customer.setSurname(resultSet.getString("surname"));
-        customer.setBirth(resultSet.getDate("birth"));
-        customer.setAddress(resultSet.getString("address"));
-        return customer;
-    }
-
-    private Book getBook(ResultSet resultSet) throws SQLException {
-        Book book = new Book();
-        book.setId(resultSet.getInt("id"));
-        book.setTitle(resultSet.getString("title"));
-        book.setAuthor(resultSet.getString("author"));
-        book.setIssueDate(resultSet.getDate("date_of_issue"));
-        book.setGenre(resultSet.getString("genre"));
-        return book;
-    }
-
-
-*/

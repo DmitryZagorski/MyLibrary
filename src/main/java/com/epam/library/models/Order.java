@@ -97,4 +97,18 @@ public class Order {
     public int hashCode() {
         return Objects.hash(id, totalQuantity, customerId, creationDate, expirationDate, placeOfReadingId, cartId, active);
     }
+
+    @Override
+    public String toString() {
+        return "Order{" +
+                "id=" + id +
+                ", totalQuantity=" + totalQuantity +
+                ", customerId=" + customerId +
+                ", creationDate=" + creationDate +
+                ", expirationDate=" + expirationDate +
+                ", placeOfReadingId=" + placeOfReadingId +
+                ", cartId=" + cartId +
+                ", active=" + active +
+                '}';
+    }
 }

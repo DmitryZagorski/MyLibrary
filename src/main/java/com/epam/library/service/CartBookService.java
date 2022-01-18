@@ -22,7 +22,6 @@ public class CartBookService {
         return instance;
     }
 
-
     public CartBook addCartBook(int bookId, int quantity, int cartId) {
         CartBook cartBook = new CartBook();
         cartBook.setBookId(bookId);
