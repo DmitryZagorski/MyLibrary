@@ -1,8 +1,7 @@
-package com.epam.library.servletsTwo;
+package com.epam.library.servlets;
 
 import com.epam.library.exceptions.CartBookException;
 import com.epam.library.repositories.JDBCCartBookRepository;
-import com.epam.library.repositories.JDBCCustomerRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

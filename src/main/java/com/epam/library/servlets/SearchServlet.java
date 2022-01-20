@@ -1,11 +1,10 @@
-package com.epam.library.servletsTwo;
+package com.epam.library.servlets;
 
 import com.epam.library.exceptions.EntityRerievalException;
 import com.epam.library.models.Book;
 import com.epam.library.models.Catalog;
 import com.epam.library.repositories.JDBCBookRepository;
 import com.epam.library.repositories.JDBCCatalogRepository;
-import com.epam.library.repositories.JDBCCustomerRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

@@ -1,10 +1,9 @@
-package com.epam.library.servletsTwo;
+package com.epam.library.servlets;
 
 import com.epam.library.exceptions.CustomerException;
 import com.epam.library.models.Customer;
 import com.epam.library.models.PersonRole;
 import com.epam.library.repositories.JDBCCustomerRepository;
-import com.epam.library.repositories.JDBCOrderRepository;
 import com.epam.library.service.CartService;
 import com.epam.library.service.CustomerService;
 import org.slf4j.Logger;
@@ -17,7 +16,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.sql.Date;
-import java.util.Calendar;
 
 @WebServlet(name = "addCustomerServlet")
 public class AddCustomerServlet extends HttpServlet {

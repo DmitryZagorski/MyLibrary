@@ -1,11 +1,10 @@
-package com.epam.library.servletsTwo;
+package com.epam.library.servlets;
 
 import com.epam.library.exceptions.BookException;
 import com.epam.library.models.Book;
 import com.epam.library.models.Genre;
 import com.epam.library.repositories.JDBCBookRepository;
 import com.epam.library.service.BookService;
-import com.epam.library.service.PlaceOfReadingService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

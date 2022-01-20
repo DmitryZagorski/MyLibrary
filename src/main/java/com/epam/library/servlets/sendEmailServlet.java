@@ -1,4 +1,4 @@
-package com.epam.library.servletsTwo;
+package com.epam.library.servlets;
 
 import com.epam.library.service.EmailService;
 import org.slf4j.Logger;

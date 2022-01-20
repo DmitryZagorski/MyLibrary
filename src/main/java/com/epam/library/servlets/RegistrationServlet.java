@@ -1,8 +1,7 @@
-package com.epam.library.servletsTwo;
+package com.epam.library.servlets;
 
 import com.epam.library.models.Customer;
 import com.epam.library.models.PersonRole;
-import com.epam.library.repositories.JDBCCustomerRepository;
 import com.epam.library.service.CustomerService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

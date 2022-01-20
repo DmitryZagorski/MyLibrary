@@ -8,7 +8,7 @@
 
     <servlet>
         <servlet-name>RegistrationServlet</servlet-name>
-        <servlet-class>com.epam.library.servletsTwo.RegistrationServlet</servlet-class>
+        <servlet-class>com.epam.library.servlets.RegistrationServlet</servlet-class>
     </servlet>
     <servlet-mapping>
         <servlet-name>RegistrationServlet</servlet-name>
@@ -17,7 +17,7 @@
 
     <servlet>
         <servlet-name>LoginServlet</servlet-name>
-        <servlet-class>com.epam.library.servletsTwo.LoginServlet</servlet-class>
+        <servlet-class>com.epam.library.servlets.LoginServlet</servlet-class>
     </servlet>
     <servlet-mapping>
         <servlet-name>LoginServlet</servlet-name>
@@ -26,7 +26,7 @@
 
     <servlet>
         <servlet-name>AllCustomersServlet</servlet-name>
-        <servlet-class>com.epam.library.servletsTwo.AllCustomersServlet</servlet-class>
+        <servlet-class>com.epam.library.servlets.AllCustomersServlet</servlet-class>
     </servlet>
     <servlet-mapping>
         <servlet-name>AllCustomersServlet</servlet-name>
@@ -35,7 +35,7 @@
 
     <servlet>
         <servlet-name>AllBooksServlet</servlet-name>
-        <servlet-class>com.epam.library.servletsTwo.AllBooksServlet</servlet-class>
+        <servlet-class>com.epam.library.servlets.AllBooksServlet</servlet-class>
     </servlet>
     <servlet-mapping>
         <servlet-name>AllBooksServlet</servlet-name>
@@ -44,7 +44,7 @@
 
     <servlet>
         <servlet-name>AddCustomerServlet</servlet-name>
-        <servlet-class>com.epam.library.servletsTwo.AddCustomerServlet</servlet-class>
+        <servlet-class>com.epam.library.servlets.AddCustomerServlet</servlet-class>
     </servlet>
     <servlet-mapping>
         <servlet-name>AddCustomerServlet</servlet-name>
@@ -53,7 +53,7 @@
 
     <servlet>
         <servlet-name>AddBookServlet</servlet-name>
-        <servlet-class>com.epam.library.servletsTwo.AddBookServlet</servlet-class>
+        <servlet-class>com.epam.library.servlets.AddBookServlet</servlet-class>
     </servlet>
     <servlet-mapping>
         <servlet-name>AddBookServlet</servlet-name>
@@ -62,7 +62,7 @@
 
     <servlet>
         <servlet-name>RemoveCustomerServlet</servlet-name>
-        <servlet-class>com.epam.library.servletsTwo.RemoveCustomerServlet</servlet-class>
+        <servlet-class>com.epam.library.servlets.RemoveCustomerServlet</servlet-class>
     </servlet>
     <servlet-mapping>
         <servlet-name>RemoveCustomerServlet</servlet-name>
@@ -71,7 +71,7 @@
 
     <servlet>
         <servlet-name>logoutServlet</servlet-name>
-        <servlet-class>com.epam.library.servletsTwo.logoutServlet</servlet-class>
+        <servlet-class>com.epam.library.servlets.logoutServlet</servlet-class>
     </servlet>
     <servlet-mapping>
         <servlet-name>logoutServlet</servlet-name>
@@ -80,7 +80,7 @@
 
     <servlet>
         <servlet-name>RemoveBookServlet</servlet-name>
-        <servlet-class>com.epam.library.servletsTwo.RemoveBookServlet</servlet-class>
+        <servlet-class>com.epam.library.servlets.RemoveBookServlet</servlet-class>
     </servlet>
     <servlet-mapping>
         <servlet-name>RemoveBookServlet</servlet-name>
@@ -89,7 +89,7 @@
 
     <servlet>
         <servlet-name>CatalogServlet</servlet-name>
-        <servlet-class>com.epam.library.servletsTwo.CatalogServlet</servlet-class>
+        <servlet-class>com.epam.library.servlets.CatalogServlet</servlet-class>
     </servlet>
     <servlet-mapping>
         <servlet-name>CatalogServlet</servlet-name>
@@ -98,7 +98,7 @@
 
     <servlet>
         <servlet-name>AddBookToCatalogServlet</servlet-name>
-        <servlet-class>com.epam.library.servletsTwo.AddBookToCatalogServlet</servlet-class>
+        <servlet-class>com.epam.library.servlets.AddBookToCatalogServlet</servlet-class>
     </servlet>
     <servlet-mapping>
         <servlet-name>AddBookToCatalogServlet</servlet-name>
@@ -107,7 +107,7 @@
 
     <servlet>
         <servlet-name>PrepareBooksToCatalogServlet</servlet-name>
-        <servlet-class>com.epam.library.servletsTwo.PrepareBooksToCatalogServlet</servlet-class>
+        <servlet-class>com.epam.library.servlets.PrepareBooksToCatalogServlet</servlet-class>
     </servlet>
     <servlet-mapping>
         <servlet-name>PrepareBooksToCatalogServlet</servlet-name>
@@ -116,7 +116,7 @@
 
     <servlet>
         <servlet-name>AddBookToCartServlet</servlet-name>
-        <servlet-class>com.epam.library.servletsTwo.AddBookToCartServlet</servlet-class>
+        <servlet-class>com.epam.library.servlets.AddBookToCartServlet</servlet-class>
     </servlet>
     <servlet-mapping>
         <servlet-name>AddBookToCartServlet</servlet-name>
@@ -125,7 +125,7 @@
 
     <servlet>
         <servlet-name>CartServlet</servlet-name>
-        <servlet-class>com.epam.library.servletsTwo.CartServlet</servlet-class>
+        <servlet-class>com.epam.library.servlets.CartServlet</servlet-class>
     </servlet>
     <servlet-mapping>
         <servlet-name>CartServlet</servlet-name>
@@ -134,7 +134,7 @@
 
     <servlet>
         <servlet-name>PrepareCartToOrderServlet</servlet-name>
-        <servlet-class>com.epam.library.servletsTwo.PrepareCartToOrderServlet</servlet-class>
+        <servlet-class>com.epam.library.servlets.PrepareCartToOrderServlet</servlet-class>
     </servlet>
     <servlet-mapping>
         <servlet-name>PrepareCartToOrderServlet</servlet-name>
@@ -143,7 +143,7 @@
 
     <servlet>
         <servlet-name>RemoveCartBookServlet</servlet-name>
-        <servlet-class>com.epam.library.servletsTwo.RemoveCartBookServlet</servlet-class>
+        <servlet-class>com.epam.library.servlets.RemoveCartBookServlet</servlet-class>
     </servlet>
     <servlet-mapping>
         <servlet-name>RemoveCartBookServlet</servlet-name>
@@ -152,7 +152,7 @@
 
     <servlet>
         <servlet-name>SearchServlet</servlet-name>
-        <servlet-class>com.epam.library.servletsTwo.SearchServlet</servlet-class>
+        <servlet-class>com.epam.library.servlets.SearchServlet</servlet-class>
     </servlet>
     <servlet-mapping>
         <servlet-name>SearchServlet</servlet-name>
@@ -161,7 +161,7 @@
 
     <servlet>
         <servlet-name>OrderServlet</servlet-name>
-        <servlet-class>com.epam.library.servletsTwo.OrderServlet</servlet-class>
+        <servlet-class>com.epam.library.servlets.OrderServlet</servlet-class>
     </servlet>
     <servlet-mapping>
         <servlet-name>OrderServlet</servlet-name>

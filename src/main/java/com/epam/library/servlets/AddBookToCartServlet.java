@@ -1,4 +1,4 @@
-package com.epam.library.servletsTwo;
+package com.epam.library.servlets;
 
 import com.epam.library.exceptions.CartException;
 import com.epam.library.models.Book;

@@ -1,7 +1,6 @@
-package com.epam.library.servletsTwo;
+package com.epam.library.servlets;
 
 import com.epam.library.exceptions.CustomerException;
-import com.epam.library.exceptions.EntitySavingException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
