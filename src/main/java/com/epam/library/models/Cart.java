@@ -7,7 +7,6 @@ public class Cart {
     private int id;
     private int CustomerId;
 
-
     public int getId() {
         return id;
     }

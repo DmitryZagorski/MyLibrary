@@ -1,5 +1,8 @@
 package com.epam.library.service;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import javax.mail.Authenticator;
 import javax.mail.Message;
 import javax.mail.MessagingException;
@@ -14,6 +17,8 @@ import javax.mail.internet.MimeMultipart;
 import java.util.Properties;
 
 public class EmailService {
+
+    private static final Logger Log = LoggerFactory.getLogger(EmailService.class);
 
     private static EmailService instance;
     private Properties properties;
@@ -39,6 +44,7 @@ public class EmailService {
     }
 
     public void notifyCustomerRegistration(String email, int id) throws MessagingException {
+        Log.info("Notifying customer registration");
         Session session = Session.getInstance(properties, new Authenticator() {
             @Override
             protected PasswordAuthentication getPasswordAuthentication() {
@@ -62,7 +68,5 @@ public class EmailService {
         message.setContent(multipart);
 
         Transport.send(message);
-
     }
-
 }

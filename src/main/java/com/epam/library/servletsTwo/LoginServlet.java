@@ -2,6 +2,8 @@ package com.epam.library.servletsTwo;
 
 import com.epam.library.models.Customer;
 import com.epam.library.service.CustomerService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -14,13 +16,15 @@ import java.io.IOException;
 @WebServlet(name = "loginServlet")
 public class LoginServlet extends HttpServlet {
 
+    private static final Logger Log = LoggerFactory.getLogger(LoginServlet.class);
+
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
+        Log.info("Getting parameters from formRegister.jsp");
         String login = request.getParameter("login");
         String password = request.getParameter("password");
+
         try {
-//            JDBCCustomerRepository repo = JDBCCustomerRepository.getInstance();
-//            Customer customerByLogin = repo.getCustomerByLogin(login);
             CustomerService cs = CustomerService.getInstance();
             Customer customerByLogin = cs.loginCustomer(login, password);
 
@@ -33,8 +37,8 @@ public class LoginServlet extends HttpServlet {
             }
 
             request.getRequestDispatcher("index.jsp").forward(request, response);
-        } catch (
-                Exception e) {
+        } catch (Exception e) {
+            Log.error("Error during login customer");
             throw new IOException(e);
         }
     }

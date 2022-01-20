@@ -10,6 +10,7 @@ public class Book {
     private String author;
     private Date issueDate;
     private Integer genreId;
+    private String genre;
 
     public Integer getGenreId() {
         return genreId;
@@ -49,6 +50,14 @@ public class Book {
 
     public void setIssueDate(Date issueDate) {
         this.issueDate = issueDate;
+    }
+
+    public String getGenre() {
+        return genre;
+    }
+
+    public void setGenre(String genre) {
+        this.genre = genre;
     }
 
     @Override

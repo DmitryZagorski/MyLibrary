@@ -1,8 +1,8 @@
 package com.epam.library.servletsTwo;
 
+import com.epam.library.exceptions.CatalogException;
 import com.epam.library.models.Book;
 import com.epam.library.models.Catalog;
-import com.epam.library.models.Genre1;
 import com.epam.library.repositories.JDBCBookRepository;
 import com.epam.library.repositories.JDBCCatalogRepository;
 import org.slf4j.Logger;
@@ -13,7 +13,6 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.xml.catalog.CatalogException;
 import java.io.IOException;
 import java.util.List;
 
@@ -28,6 +27,7 @@ public class AddBookToCatalogServlet extends HttpServlet {
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
+        Log.info("Getting parameters from addBookToCatalog.jsp");
         String bookID = request.getParameter("bookId");
         int bookId = Integer.parseInt(bookID);
         String totalQuantity = request.getParameter("quantity");
@@ -36,7 +36,6 @@ public class AddBookToCatalogServlet extends HttpServlet {
         int freeQuantityInt = Integer.parseInt(freeQuantity);
 
         try {
-
             Book byId = JDBCBookRepository.getInstance().getById(bookId);
             String bookTitle = byId.getTitle();
 
@@ -65,7 +64,8 @@ public class AddBookToCatalogServlet extends HttpServlet {
 
             request.getRequestDispatcher("/catalogServlet").forward(request, response);
         } catch (ServletException | IOException e) {
-            e.printStackTrace();
+            Log.error("Error during adding book to catalog");
+            throw new CatalogException(e);
         }
     }
 }

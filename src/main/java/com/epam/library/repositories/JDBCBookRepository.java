@@ -5,7 +5,7 @@ import com.epam.library.exceptions.BookException;
 import com.epam.library.exceptions.BookNotFoundException;
 import com.epam.library.exceptions.EntitySavingException;
 import com.epam.library.models.Book;
-import com.epam.library.models.Genre1;
+import com.epam.library.models.Genre;
 import com.epam.library.repositories.mapping.BookMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -61,6 +61,7 @@ public class JDBCBookRepository extends AbstractCRUDRepository<Book> {
     }
 
     public Book saveBook(Book book) {
+        Log.info("Saving book started");
         PreparedStatement prStatement = null;
         try (Connection connection = ConnectionPoolProvider.getConnection()) {
             if (book.getId() == 0) {
@@ -96,6 +97,7 @@ public class JDBCBookRepository extends AbstractCRUDRepository<Book> {
     }
 
     public List<Book> getBooksByTitle(String title) {
+        Log.info("Getting list of books by title started");
         String getBookByTitle = "select * from books where title=".concat(title);
         try (Connection connection = ConnectionPoolProvider.getConnection();
              Statement statement = connection.createStatement()) {
@@ -112,7 +114,28 @@ public class JDBCBookRepository extends AbstractCRUDRepository<Book> {
     }
 
     public Book getBookByTitle(String title) {
-        String getBookByTitle = "select * from books where title = '".concat(title).concat("'");
+        Log.info("Getting book by title started");
+        String getBookByTitle = "select * from books where title = ".concat("'").concat(title).concat("'");
+        try (Connection connection = ConnectionPoolProvider.getConnection();
+             Statement statement = connection.createStatement()) {
+            ResultSet resultSet = statement.executeQuery(getBookByTitle);
+            Book book = new Book();
+            if (resultSet.next()) {
+                book.setId(resultSet.getInt("id"));
+                book.setTitle(resultSet.getString("title"));
+                book.setAuthor(resultSet.getString("author"));
+                book.setGenreId(resultSet.getInt("genre_id"));
+            }
+            return book;
+        } catch (SQLException e) {
+            Log.error("Some error during getting book by title=" + title, e);
+            throw new BookNotFoundException(title, e);
+        }
+    }
+
+    public Book getBookByTitleWithStringGenre(String title) {
+        Log.info("Getting book by title with string genre started");
+        String getBookByTitle = "select books.title, books.author, books.issue_date, genres.title from books inner join genres on books.genre_id = genres.id where title = '".concat(title).concat("'");
         try (Connection connection = ConnectionPoolProvider.getConnection();
              Statement statement = connection.createStatement()) {
             ResultSet resultSet = statement.executeQuery(getBookByTitle);
@@ -131,6 +154,7 @@ public class JDBCBookRepository extends AbstractCRUDRepository<Book> {
     }
 
     public List<Book> getBooksByAuthor(String author) {
+        Log.info("Getting book by author started");
         String getBookByAuthor = "select * from books where author=".concat(author);
         try (Connection connection = ConnectionPoolProvider.getConnection();
              Statement statement = connection.createStatement()) {
@@ -147,6 +171,7 @@ public class JDBCBookRepository extends AbstractCRUDRepository<Book> {
     }
 
     public List<Book> getBooksByDateOfIssue(Date dateOfIssue) {
+        Log.info("Getting book by date of issue started");
         String getBookByDate = "select * from books where date_of_issue=".concat(dateOfIssue.toString());
         try (Connection connection = ConnectionPoolProvider.getConnection();
              Statement statement = connection.createStatement()) {
@@ -157,22 +182,23 @@ public class JDBCBookRepository extends AbstractCRUDRepository<Book> {
             }
             return books;
         } catch (SQLException e) {
-            Log.error("Some error during getting book by title=" + dateOfIssue, e);
+            Log.error("Some error during getting book by date of issue=" + dateOfIssue, e);
             throw new BookException(e);
         }
     }
 
-    public List<Genre1> getAllGenres() {
+    public List<Genre> getAllGenres() {
+        Log.info("Getting all genres started");
         String findAllGenres = "select * from genres";
         try (Connection connection = ConnectionPoolProvider.getConnection();
              Statement statement = connection.createStatement()) {
             ResultSet resultSet = statement.executeQuery(findAllGenres);
-            List<Genre1> genres = new ArrayList<>();
+            List<Genre> genres = new ArrayList<>();
             while (resultSet.next()) {
-                Genre1 genre1 = new Genre1();
-                genre1.setId(resultSet.getInt("id"));
-                genre1.setTitle(resultSet.getString("title"));
-                genres.add(genre1);
+                Genre genre = new Genre();
+                genre.setId(resultSet.getInt("id"));
+                genre.setTitle(resultSet.getString("title"));
+                genres.add(genre);
             }
             return genres;
         } catch (SQLException e) {
@@ -182,197 +208,10 @@ public class JDBCBookRepository extends AbstractCRUDRepository<Book> {
     }
 
     private void setBookValues(Book book, PreparedStatement prStatement) throws SQLException {
+        Log.info("Setting books values started");
         prStatement.setString(1, book.getTitle());
         prStatement.setString(2, book.getAuthor());
         prStatement.setDate(3, book.getIssueDate());
         prStatement.setInt(4, book.getGenreId());
-        //prStatement.setInt(4, book.getGenre().ordinal());
-        //prStatement.setInt(4, book.getGenreID());
     }
-
-
 }
-
- /*
-
-
-
-
-
-
-
-
-    @Override
-    public void addBook(Book book, Integer quantity) {
-        String insertNewBook = "insert into books (title, author, date_of_issue, genre) values (?,?,?,?)";
-        String insertBookQuantity = "insert into book_quantity (book_id, total_quantity, free_quantity) values (?,?,?)";
-        String getMaxBookId = "select max(id) from books";
-        try (Connection connection = ConnectionPoolProvider.getConnection();
-             PreparedStatement prStatement = connection.prepareStatement(insertNewBook);
-             PreparedStatement secondStatement = connection.prepareStatement(insertBookQuantity);
-             Statement statement = connection.createStatement();
-             ResultSet resultSet = statement.executeQuery(getMaxBookId)) {
-            prStatement.setString(1, book.getTitle());
-            prStatement.setString(2, book.getAuthor());
-            prStatement.setDate(3, book.getIssueDate());
-            prStatement.setString(4, book.getGenre());
-            int result = prStatement.executeUpdate();
-            if (result == 1) {
-                if (resultSet.next()) {
-                    int id = resultSet.getInt("id");
-                    secondStatement.setInt(1, id);
-                    secondStatement.setInt(2, quantity);
-                    secondStatement.setInt(3, quantity);
-                }
-            } else {
-                throw new CustomerException("Book was not added!");
-            }
-        } catch (SQLException e) {
-            Log.error("Something wrong during adding book", e);
-            throw new CustomerException(e);
-        }
-    }
-
-    @Override
-    public void removeBookById(Integer id) {
-        String findBookById = "select * from books where id =".concat(id.toString());
-        String removeBookById = "delete from books where id=".concat(id.toString());
-        try (Connection connection = ConnectionPoolProvider.getConnection();
-             Statement statement = connection.createStatement();
-             ResultSet resultSet = statement.executeQuery(findBookById)) {
-            if (resultSet.next()) {
-                statement.execute(removeBookById);
-            } else {
-                Log.info("Book with that ID doesn't exist");
-            }
-        } catch (SQLException e) {
-            Log.error("Error during removing book by id=" + id, e);
-            throw new BookException(e);
-        }
-    }
-
-    @Override
-    public void removeAllBooks() {
-        String removeBooks = "delete from books";
-        try (Connection connection = ConnectionPoolProvider.getConnection();
-             Statement statement = connection.createStatement()) {
-            statement.execute(removeBooks);
-        } catch (SQLException e) {
-            Log.error("Some error during removing all books", e);
-            throw new BookException(e);
-        }
-    }
-
-    @Override
-    public Book getBookById(Integer id) {
-        String getBookById = "select * from books where id=".concat(id.toString());
-        try (Connection connection = ConnectionPoolProvider.getConnection();
-             Statement statement = connection.createStatement()) {
-            ResultSet resultSet = statement.executeQuery(getBookById);
-            if (resultSet.next()) {
-                Book book = getBook(resultSet);
-                return book;
-            } else return null;
-        } catch (SQLException e) {
-            Log.error("Some error during getting book by id=" + id, e);
-            throw new BookNotFoundException(id, e);
-        }
-    }
-
-    @Override
-    public Collection<Book> getBooksByTitle(String title) {
-        String getBookByTitle = "select * from books where title=".concat(title);
-        try (Connection connection = ConnectionPoolProvider.getConnection();
-             Statement statement = connection.createStatement()) {
-            ResultSet resultSet = statement.executeQuery(getBookByTitle);
-            List<Book> books = new ArrayList<>();
-            while (resultSet.next()) {
-                books.add(getBook(resultSet));
-            }
-            return books;
-        } catch (SQLException e) {
-            Log.error("Some error during getting book by title=" + title, e);
-            throw new BookNotFoundException(title, e);
-        }
-    }
-
-    @Override
-    public Collection<Book> getBooksByAuthor(String author) {
-        String getBookByAuthor = "select * from books where author=".concat(author);
-        try (Connection connection = ConnectionPoolProvider.getConnection();
-             Statement statement = connection.createStatement()) {
-            ResultSet resultSet = statement.executeQuery(getBookByAuthor);
-            List<Book> books = new ArrayList<>();
-            while (resultSet.next()) {
-                books.add(getBook(resultSet));
-            }
-            return books;
-        } catch (SQLException e) {
-            Log.error("Some error during getting book by author=" + author, e);
-            throw new BookNotFoundException(author, e);
-        }
-    }
-
-    @Override
-    public Collection<Book> getBooksByDateOfIssue(Date dateOfIssue) {
-        String getBookByDate = "select * from books where date_of_issue=".concat(dateOfIssue.toString());
-        try (Connection connection = ConnectionPoolProvider.getConnection();
-             Statement statement = connection.createStatement()) {
-            ResultSet resultSet = statement.executeQuery(getBookByDate);
-            List<Book> books = new ArrayList<>();
-            while (resultSet.next()) {
-                books.add(getBook(resultSet));
-            }
-            return books;
-        } catch (SQLException e) {
-            Log.error("Some error during getting book by title=" + dateOfIssue, e);
-            throw new BookException(e);
-        }
-    }
-
-    @Override
-    public Collection<Book> getAllBooks() {
-        String getAllBooks = "select * from books";
-        try (Connection connection = ConnectionPoolProvider.getConnection();
-             Statement statement = connection.createStatement()) {
-            ResultSet resultSet = statement.executeQuery(getAllBooks);
-            List<Book> books = new ArrayList<>();
-            while (resultSet.next()) {
-                books.add(getBook(resultSet));
-            }
-            return books;
-        } catch (SQLException e) {
-            Log.error("Some error during getting all books", e);
-            throw new BookException(e);
-        }
-    }
-
-    private Book getBook(ResultSet resultSet) throws SQLException {
-        Book book = new Book();
-        book.setId(resultSet.getInt("id"));
-        book.setTitle(resultSet.getString("title"));
-        book.setAuthor(resultSet.getString("author"));
-        book.setIssueDate(resultSet.getDate("date_of_issue"));
-       // book.setGenre(resultSet.getString("genre"));
-        return book;
-    }
-
-
-
-String insertNewBook = "insert into books (title, author, date_of_issue, genre) values (?,?,?,?)";
-        try (Connection connection = ConnectionPoolProvider.getConnection();
-             PreparedStatement prStatement = connection.prepareStatement(insertNewBook)) {
-            prStatement.setString(1, book.getTitle());
-            prStatement.setString(2, book.getAuthor());
-            prStatement.setDate(3, book.getIssueDate());
-            prStatement.setString(4, book.getGenre());
-            int result = prStatement.executeUpdate();
-
-            if (result != 1) {
-                throw new CustomerException("Book was not added!");
-            }
-        } catch (SQLException e) {
-            Log.error("Something wrong during adding book", e);
-            throw new CustomerException(e);
-
-*/

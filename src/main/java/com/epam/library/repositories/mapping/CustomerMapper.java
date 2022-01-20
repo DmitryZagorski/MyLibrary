@@ -2,14 +2,19 @@ package com.epam.library.repositories.mapping;
 
 import com.epam.library.models.Customer;
 import com.epam.library.models.PersonRole;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public class CustomerMapper implements MapperToObject<Customer> {
 
+    private static final Logger Log = LoggerFactory.getLogger(CustomerMapper.class);
+
     @Override
     public Customer toObject(ResultSet resultSet) throws SQLException {
+        Log.info("Mapping of customer started");
         Customer customer = new Customer();
         customer.setId(resultSet.getInt("id"));
         customer.setName(resultSet.getString("name"));

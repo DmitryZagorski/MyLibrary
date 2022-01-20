@@ -4,6 +4,8 @@ import com.epam.configurations.Configuration;
 import com.mysql.jdbc.Driver;
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -12,10 +14,13 @@ import java.util.Properties;
 
 public class ConnectionPoolProvider {
 
+    private static final Logger Log = LoggerFactory.getLogger(ConnectionPoolProvider.class);
+
     private static HikariConfig config = new HikariConfig();
     private static HikariDataSource ds;
 
     public static Connection getConnection() throws SQLException {
+        Log.info("Getting connection started");
         if (ds==null){
             Properties applicationProperties = Configuration.getApplicationProperties();
             config.setJdbcUrl(applicationProperties.getProperty("jdbc.url"));

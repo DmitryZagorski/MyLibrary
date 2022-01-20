@@ -6,6 +6,8 @@ import com.epam.library.models.Catalog;
 import com.epam.library.repositories.JDBCBookRepository;
 import com.epam.library.repositories.JDBCCatalogRepository;
 import com.epam.library.repositories.JDBCCustomerRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -17,12 +19,16 @@ import java.util.List;
 
 @WebServlet(name = "searchServlet")
 public class SearchServlet extends HttpServlet {
+
+    private static final Logger Log = LoggerFactory.getLogger(SearchServlet.class);
+
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
     }
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
+        Log.info("Getting parameter from index.jsp");
         String search = request.getParameter("query");
 
         try{
@@ -34,6 +40,7 @@ public class SearchServlet extends HttpServlet {
             request.setAttribute("foundBooks", foundBooks);
             request.getRequestDispatcher("/foundBook.jsp").forward(request, response);
         } catch (Exception e) {
+            Log.error("Error during searching entity");
             throw new EntityRerievalException(e);
         }
     }

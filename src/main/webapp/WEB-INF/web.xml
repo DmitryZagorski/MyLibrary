@@ -133,15 +133,6 @@
     </servlet-mapping>
 
     <servlet>
-        <servlet-name>CreateOrderServlet</servlet-name>
-        <servlet-class>com.epam.library.servletsTwo.CreateOrderServlet</servlet-class>
-    </servlet>
-    <servlet-mapping>
-        <servlet-name>CreateOrderServlet</servlet-name>
-        <url-pattern>/createOrderServlet</url-pattern>
-    </servlet-mapping>
-
-    <servlet>
         <servlet-name>PrepareCartToOrderServlet</servlet-name>
         <servlet-class>com.epam.library.servletsTwo.PrepareCartToOrderServlet</servlet-class>
     </servlet>
@@ -166,6 +157,15 @@
     <servlet-mapping>
         <servlet-name>SearchServlet</servlet-name>
         <url-pattern>/searchServlet</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>OrderServlet</servlet-name>
+        <servlet-class>com.epam.library.servletsTwo.OrderServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>OrderServlet</servlet-name>
+        <url-pattern>/orderServlet</url-pattern>
     </servlet-mapping>
 
 

@@ -30,6 +30,7 @@ public class CustomerService {
     }
 
     public Customer registerCustomer(String name, String surname, String address, String email, Date dateOfSignUp, PersonRole role, Boolean locked, String login, String password){
+        Log.info("Setting customer values before registration");
         String hashPassword = hashPassword(password);
         Customer customer = new Customer();
         customer.setName(name);
@@ -54,6 +55,7 @@ public class CustomerService {
     }
 
     public Customer loginCustomer(String login, String password){
+        Log.info("Login of customer");
         Customer foundByLoginCustomer = JDBCCustomerRepository.getInstance().getCustomerByLogin(login);
         if (foundByLoginCustomer!=null){
             String passwordInSQL = foundByLoginCustomer.getPassword();
@@ -66,6 +68,7 @@ public class CustomerService {
     }
 
     private String hashPassword(String password) {
+        Log.info("Hashing of password");
         return DigestUtils.md5Hex(password).toUpperCase();
     }
 }

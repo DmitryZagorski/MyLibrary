@@ -37,6 +37,7 @@ public class JDBCCustomerRepository extends AbstractCRUDRepository<Customer> {
     }
 
     public Customer getCustomerByNameAndSurname(String name, String surname) {
+        Log.info("Getting customer by name and surname");
         try (Connection connection = ConnectionPoolProvider.getConnection();
              Statement statement = connection.createStatement();
              ResultSet resultSet = statement.executeQuery(String.format(getCustomerByNameAndSurnameSQL, name, surname))) {
@@ -54,6 +55,7 @@ public class JDBCCustomerRepository extends AbstractCRUDRepository<Customer> {
     }
 
     public Customer getCustomerByLogin(String login) {
+        Log.info("Getting customer by login");
         try (Connection connection = ConnectionPoolProvider.getConnection();
              Statement statement = connection.createStatement();
              ResultSet resultSet = statement.executeQuery(String.format(getCustomerByLoginSQL, login))) {
@@ -96,6 +98,7 @@ public class JDBCCustomerRepository extends AbstractCRUDRepository<Customer> {
     }
 
     public Customer saveCustomer(Customer customer) {
+        Log.info("Saving customer");
         PreparedStatement prStatement = null;
         try (Connection connection = ConnectionPoolProvider.getConnection()) {
             if (customer.getId() == 0) {
@@ -131,6 +134,7 @@ public class JDBCCustomerRepository extends AbstractCRUDRepository<Customer> {
     }
 
     public Integer findLastIdOfCustomer() {
+        Log.info("Finding last id in table 'customers'");
         String selectLastId = "select id from cusomers ORDER BY id DESC LIMIT 1";
         try (Connection connection = ConnectionPoolProvider.getConnection();
              Statement statement = connection.createStatement();
@@ -147,6 +151,7 @@ public class JDBCCustomerRepository extends AbstractCRUDRepository<Customer> {
     }
 
     private void setCustomerValues(Customer customer, PreparedStatement prStatement) throws SQLException {
+        Log.info("Setting values of customer");
         prStatement.setString(1, customer.getName());
         prStatement.setString(2, customer.getSurname());
         prStatement.setString(3, customer.getAddress());
@@ -157,195 +162,4 @@ public class JDBCCustomerRepository extends AbstractCRUDRepository<Customer> {
         prStatement.setString(8, customer.getPassword());
         prStatement.setInt(9, customer.getRole().ordinal());
     }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-/*
-
-    @Override
-    public void addCustomer(Customer customer) {
-        String insertNewCustomer = "insert into customers (name, surname, birth, address, date_of_sign_up) values (?,?,?,?,?)";
-        try (Connection connection = ConnectionPoolProvider.getConnection();
-             PreparedStatement prStatement = connection.prepareStatement(insertNewCustomer)) {
-            prStatement.setString(1, customer.getName());
-            prStatement.setString(2, customer.getSurname());
-            prStatement.setDate(3, customer.getBirth());
-            prStatement.setString(4, customer.getAddress());
-            prStatement.setDate(5, customer.getDateOfSignUp());
-            int result = prStatement.executeUpdate();
-            if (result != 1) {
-                throw new CustomerException("Customer was not added!");
-            }
-        } catch (SQLException e) {
-            Log.error("Something wrong during adding customer", e);
-            throw new CustomerException(e);
-        }
-    }
-
-    @Override
-    public void removeCustomerById(Integer id) {
-        String findCustomer = "select * from customers where id = ".concat(id.toString());
-        String removeCustomer = "delete from customers where id = ".concat(id.toString());
-        try (Connection connection = ConnectionPoolProvider.getConnection();
-             Statement statement = connection.createStatement();
-             ResultSet resultSet = statement.executeQuery(findCustomer)) {
-            if (resultSet.next()) {
-                statement.execute(removeCustomer);
-            } else {
-                Log.info("Customer with that Id doesn't exist.");
-            }
-        } catch (SQLException e) {
-            Log.error("Something wrong during removing customer by id " + id, e);
-            throw new CustomerException(e);
-        }
-    }
-
-    @Override
-    public void removeCustomer(Integer id) {
-        String removeCustomerById = "delete from customers where id="+id;
-        try (Connection connection = ConnectionPoolProvider.getConnection();
-             Statement statement = connection.createStatement()) {
-            statement.execute(removeCustomerById);
-        } catch (SQLException e) {
-            Log.error("Something wrong during removing customer by id ", e);
-            throw new CustomerException(e);
-        }
-    }
-
-    @Override
-    public void removeAllCustomers() {
-        String removeAllCustomers = "delete from customers";
-        try (Connection connection = ConnectionPoolProvider.getConnection();
-             Statement statement = connection.createStatement()) {
-            statement.execute(removeAllCustomers);
-        } catch (SQLException e) {
-            Log.error("Something wrong during removing all customers", e);
-            throw new CustomerException(e);
-        }
-    }
-
-    @Override
-    public Customer getCustomerById(Integer id) {
-        String getById = "select * from customers where id = ".concat(id.toString());
-        try (Connection connection = ConnectionPoolProvider.getConnection();
-             Statement statement = connection.createStatement();
-             ResultSet resultSet = statement.executeQuery(getById)) {
-            if (resultSet.next()) {
-                Customer customer = getCustomer(resultSet);
-                return customer;
-            } else {
-                return null;
-            }
-        } catch (SQLException e) {
-            Log.error("Something wrong during retrieval id " + id, e);
-            throw new CustomerNotFoundException(id, e);
-        }
-    }
-
-    @Override
-    public Collection<Customer> getAllCustomers() {
-        String getAllCustomers = "select * from customers";
-        try (Connection connection = ConnectionPoolProvider.getConnection();
-             Statement statement = connection.createStatement();
-             ResultSet resultSet = statement.executeQuery(getAllCustomers)) {
-            List<Customer> customerList = new ArrayList<>();
-            while (resultSet.next()) {
-                customerList.add(getCustomer(resultSet));
-            }
-            return customerList;
-        } catch (SQLException e) {
-            Log.error("Something wrong during getting all customers", e);
-            throw new CustomerException(e);
-        }
-    }
-
-    @Override
-    public Customer getCustomerByNameAndSurname(String name, String surname) {
-        String getByNameAndSurname = "select * from customers where name = '" + name +
-                "'  and surname = '" + surname + "'";
-        try (Connection connection = ConnectionPoolProvider.getConnection();
-             Statement statement = connection.createStatement();
-             ResultSet resultSet = statement.executeQuery(getByNameAndSurname)) {
-            if (resultSet.next()) {
-                Customer customer = getCustomer(resultSet);
-                return customer;
-            } else {
-                return null;
-            }
-        } catch (SQLException e) {
-            Log.error("Something wrong during retrieval name " + name + " and surname " + surname, e);
-            throw new CustomerNotFoundException(name, surname, e);
-        }
-    }
-
-    @Override
-    public Collection<Customer> getCustomersByDateOfSignUp(Date fromDate, Date toDate) {
-        String getCustomersBetweenDates = "select * from customers where date_of_sign_up between (fromDate and toDate)";
-        try (Connection connection = ConnectionPoolProvider.getConnection();
-             Statement statement = connection.createStatement();
-             ResultSet resultSet = statement.executeQuery(getCustomersBetweenDates)) {
-            List<Customer> customersBetweenDates = new ArrayList<>();
-            while (resultSet.next()) {
-                customersBetweenDates.add(getCustomer(resultSet));
-            }
-            return customersBetweenDates;
-        } catch (SQLException e) {
-            Log.error("Something wrong during retrieval customers with date of sign up between " + fromDate.toString() + " and " + toDate.toString());
-            throw new CustomerException(e);
-        }
-    }
-
-    private Customer getCustomer(ResultSet resultSet) throws SQLException {
-        Customer customer = new Customer();
-        customer.setId(resultSet.getInt("id"));
-        customer.setName(resultSet.getString("name"));
-        customer.setSurname(resultSet.getString("surname"));
-        customer.setBirth(resultSet.getDate("birth"));
-        customer.setAddress(resultSet.getString("address"));
-        customer.setDateOfSignUp(resultSet.getDate("date_of_sign_up"));
-        return customer;
-    }
-
-    public Integer getIdOfOnceCustomerInTableForTest() {
-        String getIdOfCustomer = "select * from customers";
-        try (Connection connection = ConnectionPoolProvider.getConnection();
-             Statement statement = connection.createStatement();
-             ResultSet resultSet = statement.executeQuery(getIdOfCustomer)) {
-            int id;
-            if (resultSet.next()) {
-                id = resultSet.getInt("id");
-                return id;
-            }
-            else return null;
-        } catch (SQLException e) {
-            Log.error("Error during retrieval id ", e);
-            throw new CustomerException(e);
-        }
-    }
-
- */
 }

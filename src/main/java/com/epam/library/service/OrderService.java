@@ -15,7 +15,6 @@ public class OrderService {
 
     private static OrderService instance;
 
-
     private OrderService(){
 
         instance = this;
@@ -29,6 +28,7 @@ public class OrderService {
     }
 
     public Order addOrder(int totalQuantity, int customerId, Date creationDate, Date expirationDate, int placeOfReadingId, int cartId, boolean active){
+        Log.info("Setting order values");
         Order order = new Order();
         order.setTotalQuantity(totalQuantity);
         order.setCustomerId(customerId);

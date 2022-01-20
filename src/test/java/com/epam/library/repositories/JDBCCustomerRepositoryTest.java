@@ -1,18 +1,34 @@
 package com.epam.library.repositories;
 
+import com.epam.library.connections.ConnectionPoolProvider;
 import com.epam.library.models.Customer;
 import com.epam.library.models.PersonRole;
+import org.apache.commons.io.IOUtils;
+import org.junit.Before;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
 import java.sql.Date;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.List;
 
 class JDBCCustomerRepositoryTest {
 
+    @Before
+    public void init() throws SQLException, IOException {
+        Statement createStatement = ConnectionPoolProvider.getConnection().createStatement();
+        InputStream resourceAsStream = getClass().getClassLoader().getResourceAsStream("db-init.sql");
+        String string = IOUtils.toString(resourceAsStream, StandardCharsets.UTF_8);
+        createStatement.executeUpdate(string);
+    }
+
     @Test
     void should_add_new_customer() {
-        //given
+
         JDBCCustomerRepository instance = JDBCCustomerRepository.getInstance();
 
         Customer c1 = new Customer();

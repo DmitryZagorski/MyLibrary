@@ -1,7 +1,6 @@
 package com.epam.library.repositories;
 
 import com.epam.library.connections.ConnectionPoolProvider;
-import com.epam.library.exceptions.EntityRemoveException;
 import com.epam.library.exceptions.EntityRerievalException;
 import com.epam.library.exceptions.EntitySavingException;
 import com.epam.library.models.CartBook;
@@ -57,6 +56,7 @@ public class JDBCCartBookRepository extends AbstractCRUDRepository<CartBook> {
     }
 
     public CartBook addBookToCartBook(CartBook cartBook) {
+        Log.info("Adding book ot cart started");
         String insertBookSQL = "insert into cart_books (book_id, quantity, cart_id) values (?,?,?)";
         String updateBookSQL = "update cart_books set book_id = ?, quantity = ?, cart_id = ? where id = ?";
         PreparedStatement prStatement = null;
@@ -94,6 +94,7 @@ public class JDBCCartBookRepository extends AbstractCRUDRepository<CartBook> {
     }
 
     public List<CartBook> findAllWithJoinByCartId(int cartId) {
+        Log.info("Getting books in cart by Id started");
         String findAllWithJoin = "select cart_books.id, cart_books.book_id from cart_books inner join cart on cart_books.cart_id = ".concat(String.valueOf(cartId));
         try (Connection connection = ConnectionPoolProvider.getConnection();
              Statement statement = connection.createStatement();
@@ -113,6 +114,7 @@ public class JDBCCartBookRepository extends AbstractCRUDRepository<CartBook> {
     }
 
     public List<CartBook> findAllWithTitleWithJoinByCartId(int cartId) {
+        Log.info("Getting books in cart by cart_id started");
         String findAllWithJoin = "select cart_books.id, books.title from cart_books inner join books on cart_books.book_id = books.id where cart_id = ".concat(String.valueOf(cartId));
         try (Connection connection = ConnectionPoolProvider.getConnection();
              Statement statement = connection.createStatement();
@@ -131,26 +133,8 @@ public class JDBCCartBookRepository extends AbstractCRUDRepository<CartBook> {
         }
     }
 
-    public List<CartBook> findAllWithIdWithJoinByCartId(int cartId) {
-        String findAllWithJoin = "select cart_books.id, books.id from cart_books inner join books on cart_books.book_id = books.id where cart_id = ".concat(String.valueOf(cartId));
-        try (Connection connection = ConnectionPoolProvider.getConnection();
-             Statement statement = connection.createStatement();
-             ResultSet resultSet = statement.executeQuery(findAllWithJoin)) {
-            List<CartBook> books = new ArrayList<>();
-            while (resultSet.next()) {
-                CartBook cartBook = new CartBook();
-                cartBook.setId(resultSet.getInt("id"));
-                cartBook.setBookId(resultSet.getInt("id"));
-                books.add(cartBook);
-            }
-            return books;
-        } catch (SQLException e) {
-            Log.error("Something wrong during retrieval entity ", e);
-            throw new EntityRerievalException(e);
-        }
-    }
-
     private void setCartBookValues(CartBook cartBook, PreparedStatement prStatement) throws SQLException {
+        Log.info("Setting book in cart started");
         prStatement.setInt(1, cartBook.getBookId());
         prStatement.setInt(2, cartBook.getQuantity());
         prStatement.setInt(3, cartBook.getCartId());

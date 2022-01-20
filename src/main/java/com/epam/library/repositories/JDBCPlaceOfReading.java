@@ -61,6 +61,7 @@ public class JDBCPlaceOfReading extends AbstractCRUDRepository<PlaceOfReading>{
     }
 
     public PlaceOfReading addPlaceOfReading(PlaceOfReading placeOfReading) {
+        Log.info("Adding place of reading");
         PreparedStatement prStatement = null;
         try (Connection connection = ConnectionPoolProvider.getConnection()) {
             if (placeOfReading.getId() == 0) {
@@ -96,8 +97,7 @@ public class JDBCPlaceOfReading extends AbstractCRUDRepository<PlaceOfReading>{
     }
 
     private void setPlaceOfReadingValues(PlaceOfReading placeOfReading, PreparedStatement prStatement) throws SQLException {
+        Log.info("Setting values of reading place");
         prStatement.setString(1, placeOfReading.getPlaceTitle());
-
     }
-
 }

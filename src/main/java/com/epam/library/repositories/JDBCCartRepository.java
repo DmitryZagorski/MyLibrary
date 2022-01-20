@@ -60,6 +60,7 @@ public class JDBCCartRepository extends AbstractCRUDRepository<Cart> {
     }
 
     public Cart addCart(Cart cart) {
+        Log.info("Adding cart started");
         String insertBookSQL = "insert into cart (customer_id) values (?)";
         String updateBookSQL = "update catalog set customer_id = ? where id = ?";
         PreparedStatement prStatement = null;
@@ -97,6 +98,7 @@ public class JDBCCartRepository extends AbstractCRUDRepository<Cart> {
     }
 
     public Integer getCartIdByCustomerId(int customerId) {
+        Log.info("Getting cart by customerId started");
         String getCartByCustomerId = "select * from cart where customer_id=".concat(String.valueOf(customerId));
         try (Connection connection = ConnectionPoolProvider.getConnection();
              Statement statement = connection.createStatement()) {
@@ -113,28 +115,12 @@ public class JDBCCartRepository extends AbstractCRUDRepository<Cart> {
     }
 
     private void setCartValues(Cart cart, PreparedStatement prStatement) throws SQLException {
+        Log.info("Setting cart values started");
         prStatement.setInt(1, cart.getCustomerId());
     }
 
-    public List<Cart> getCartByCustomerId(int customerId) {
-        String getByCustomerId = "select * from cart where customer_id = %d";
-        try (Connection connection = ConnectionPoolProvider.getConnection();
-             Statement statement = connection.createStatement();
-             ResultSet resultSet = statement.executeQuery(String.format(getByCustomerId, customerId))) {
-            List<Cart> cart = new ArrayList<>();
-            while (resultSet.next()) {
-                Cart someCart = new Cart();
-                someCart.setCustomerId(resultSet.getInt("customer_id"));
-                cart.add(someCart);
-            }
-            return cart;
-        } catch (SQLException e) {
-            Log.error("Something wrong during retrieval cartList ", e);
-            throw new EntityRerievalException(e);
-        }
-    }
-
     public void removeCartById(Integer id) {
+        Log.info("Removing cart by cartId started");
         String removeByCartId = "delete from cart_books where cart_id = ".concat(String.valueOf(id));
         try (Connection connection = ConnectionPoolProvider.getConnection()) {
             Statement statement = connection.createStatement();

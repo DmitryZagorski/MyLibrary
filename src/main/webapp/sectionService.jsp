@@ -62,7 +62,7 @@
 
             <h1> Orders</h1>
 
-            <form action="">
+            <form action="orderServlet">
                 <div class="col-sm-12">
                     <input class="send_btn" type="submit" value="View all orders">
                 </div>

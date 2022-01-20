@@ -22,20 +22,10 @@ public class CartService {
         return instance;
     }
 
-
-
     public Cart addCart(int customerId) {
+        Log.info("Setting of cart values");
         Cart cart = new Cart();
         cart.setCustomerId(customerId);
         return JDBCCartRepository.getInstance().addCart(cart);
     }
-
-//    public Cart addBookToCartWithoutOrder(int bookId, int bookQuantity, int customerId) {
-//        Cart cart = new Cart();
-//        cart.setBookId(bookId);
-//        cart.setBookQuantity(bookQuantity);
-//        cart.setCustomerId(customerId);
-//        return JDBCCartRepository.getInstance().addBookToCartWithoutOrder(cart);
-//    }
-
 }

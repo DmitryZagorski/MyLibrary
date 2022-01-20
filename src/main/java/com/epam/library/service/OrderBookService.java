@@ -23,11 +23,11 @@ public class OrderBookService {
     }
 
     public OrderBook addOrderBook(int bookId, int quantity, int orderId) {
+        Log.info("Setting book values before adding to order");
         OrderBook orderBook = new OrderBook();
         orderBook.setBookId(bookId);
         orderBook.setQuantity(quantity);
         orderBook.setOrderId(orderId);
-        return JDBCOrderBookRepository.getInstance().saveOrder(orderBook);
+        return JDBCOrderBookRepository.getInstance().saveOrderBook(orderBook);
     }
-
 }

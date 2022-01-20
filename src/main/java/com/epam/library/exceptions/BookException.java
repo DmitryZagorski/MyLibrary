@@ -1,22 +1,23 @@
 package com.epam.library.exceptions;
 
-public class BookException extends RuntimeException{
+public class  BookException extends RuntimeException{
 
     public BookException() {
-
     }
 
     public BookException(String message) {
         super(message);
     }
 
-    public BookException(String message, Throwable e) {
-        super(message, e);
+    public BookException(String message, Throwable cause) {
+        super(message, cause);
     }
 
-    public BookException(Throwable e) {
-        super(e);
+    public BookException(Throwable cause) {
+        super(cause);
     }
 
-
+    public BookException(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace) {
+        super(message, cause, enableSuppression, writableStackTrace);
+    }
 }

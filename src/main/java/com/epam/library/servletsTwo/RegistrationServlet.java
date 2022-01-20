@@ -4,6 +4,8 @@ import com.epam.library.models.Customer;
 import com.epam.library.models.PersonRole;
 import com.epam.library.repositories.JDBCCustomerRepository;
 import com.epam.library.service.CustomerService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -17,7 +19,11 @@ import java.sql.Date;
 @WebServlet(name = "registrationServlet")
 public class RegistrationServlet extends HttpServlet {
 
+    private static final Logger Log = LoggerFactory.getLogger(RegistrationServlet.class);
+
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+
+        Log.info("Getting parameters from formRegister.jsp");
         String name = request.getParameter("name");
         String surname = request.getParameter("surname");
         String address = request.getParameter("address");
@@ -25,7 +31,6 @@ public class RegistrationServlet extends HttpServlet {
         Date dateOfSignUp = Date.valueOf(request.getParameter("dateOfSignUp"));
         String login = request.getParameter("login");
         String password = request.getParameter("password");
-
 
         try {
             CustomerService instance = CustomerService.getInstance();
@@ -37,6 +42,7 @@ public class RegistrationServlet extends HttpServlet {
             request.getRequestDispatcher("index.jsp").forward(request, response);
 
         } catch (Exception e) {
+            Log.error("Error during registration");
             throw new IOException(e);
         }
 

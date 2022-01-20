@@ -3,7 +3,6 @@ package com.epam.library.repositories;
 import com.epam.library.connections.ConnectionPoolProvider;
 import com.epam.library.exceptions.EntityRerievalException;
 import com.epam.library.exceptions.EntitySavingException;
-import com.epam.library.models.CartBook;
 import com.epam.library.models.OrderBook;
 import com.epam.library.repositories.mapping.CartMapper;
 import org.slf4j.Logger;
@@ -56,7 +55,8 @@ public class JDBCOrderBookRepository extends AbstractCRUDRepository<OrderBook> {
         super.removeAll();
     }
 
-    public OrderBook saveOrder(OrderBook orderBook) {
+    public OrderBook saveOrderBook(OrderBook orderBook) {
+        Log.info("Saving book to order");
         String insertOrderSQL = "insert into order_books (book_id, quantity, order_id) values (?,?,?)";
         String updateOrderSQL = "update order_books set book_id = ?, quantity = ?, order_id = ? where id = ?";
         PreparedStatement prStatement = null;
@@ -94,6 +94,7 @@ public class JDBCOrderBookRepository extends AbstractCRUDRepository<OrderBook> {
     }
 
     public List<OrderBook> findAllWithTitleWithJoinByCartId(int orderId) {
+        Log.info("Finding orders with titles by orderId");
         String findAllWithJoin = "select order_books.id, books.title from order_books inner join books on order_books.book_id = books.id where order_id = ".concat(String.valueOf(orderId));
         try (Connection connection = ConnectionPoolProvider.getConnection();
              Statement statement = connection.createStatement();
@@ -113,9 +114,9 @@ public class JDBCOrderBookRepository extends AbstractCRUDRepository<OrderBook> {
     }
 
     private void setOrderBookValues(OrderBook orderBook, PreparedStatement prStatement) throws SQLException {
+        Log.info("Setting values of book in order");
         prStatement.setInt(1, orderBook.getBookId());
         prStatement.setInt(2, orderBook.getQuantity());
         prStatement.setInt(3, orderBook.getOrderId());
     }
-
 }

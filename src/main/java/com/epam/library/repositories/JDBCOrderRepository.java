@@ -54,6 +54,7 @@ public class JDBCOrderRepository extends AbstractCRUDRepository<Order> {
     }
 
     public Order addOrder(Order order) {
+        Log.info("Adding order");
         String insertOrderSQL = "insert into orders (total_quantity, customer_id, date_of_creation, expiration_date, place_of_reading_id, cart_id, active) values (?,?,?,?,?,?,?)";
         String updateOrderSQL = "update catalog set total_quantity = ?, customer_id = ?, date_of_creation = ?, expiration_date = ?, place_of_reading_id = ?, cart_id = ?, active = ? where id = ?";
         PreparedStatement prStatement = null;
@@ -91,6 +92,7 @@ public class JDBCOrderRepository extends AbstractCRUDRepository<Order> {
     }
 
     public Integer findLastIdOfOrder() {
+        Log.info("Finding last Id in table 'orders'");
         String selectLastId = "SELECT id FROM orders ORDER BY id DESC LIMIT 1";
         try (Connection connection = ConnectionPoolProvider.getConnection();
              Statement statement = connection.createStatement();
@@ -107,6 +109,7 @@ public class JDBCOrderRepository extends AbstractCRUDRepository<Order> {
     }
 
     private void setOrderValues(Order order, PreparedStatement prStatement) throws SQLException {
+        Log.info("Setting order values");
         prStatement.setInt(1, order.getTotalQuantity());
         prStatement.setInt(2, order.getCustomerId());
         prStatement.setDate(3, order.getCreationDate());
@@ -115,5 +118,4 @@ public class JDBCOrderRepository extends AbstractCRUDRepository<Order> {
         prStatement.setInt(6, order.getCartId());
         prStatement.setBoolean(7, order.isActive());
     }
-
 }

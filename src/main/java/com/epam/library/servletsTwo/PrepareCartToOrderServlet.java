@@ -29,12 +29,12 @@ public class PrepareCartToOrderServlet extends HttpServlet {
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
+        Log.info("Getting parameters of customer from session");
         Customer customer = (Customer) request.getSession().getAttribute("customer");
         Integer customerId = null;
         if (customer == null) {
             response.setContentType("text/html");
             PrintWriter out = response.getWriter();
-
             out.println("<html>");
             out.println("<head>");
             out.println("<p> You have to sign in or sign up to create an order </p>");
@@ -69,6 +69,7 @@ public class PrepareCartToOrderServlet extends HttpServlet {
             int orderId = JDBCOrderRepository.getInstance().findLastIdOfOrder();
             List<CartBook> booksInCart = JDBCCartBookRepository.getInstance().findAllWithTitleWithJoinByCartId(cartIdByCustomerId);
             List<Book> allBooks = JDBCBookRepository.getInstance().findAll();
+
             for (CartBook cartBook : booksInCart) {
                 for (Book allBook : allBooks) {
                     if (cartBook.getBookTitle().equalsIgnoreCase(allBook.getTitle())){
@@ -76,12 +77,14 @@ public class PrepareCartToOrderServlet extends HttpServlet {
                     }
                 }
             }
+
             for (CartBook cartBook : booksInCart) {
                 OrderBookService.getInstance().addOrderBook(cartBook.getBookId(), 1, orderId);
                 Catalog bookInCatalog = JDBCCatalogRepository.getInstance().getByBookId(cartBook.getBookId());
                 int bookCurrentQuantity = bookInCatalog.getFreeQuantity();
                 JDBCCatalogRepository.getInstance().decreaseFreeQuantityOfBook(cartBook.getBookId(), bookCurrentQuantity);
             }
+
             JDBCCartRepository.getInstance().removeCartById(cartIdByCustomerId);
 
             List<OrderBook> booksInOrder = JDBCOrderBookRepository.getInstance().findAllWithTitleWithJoinByCartId(orderId);
@@ -99,7 +102,7 @@ public class PrepareCartToOrderServlet extends HttpServlet {
             request.getRequestDispatcher("/order.jsp").forward(request, response);
 
         } catch (Exception e) {
-            Log.error("Something wrong during creation order");
+            Log.error("Error during creation order");
             throw new EntitySavingException(e);
         }
     }

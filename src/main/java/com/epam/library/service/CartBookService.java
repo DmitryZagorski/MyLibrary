@@ -23,11 +23,11 @@ public class CartBookService {
     }
 
     public CartBook addCartBook(int bookId, int quantity, int cartId) {
+        Log.info("Setting of book values before adding to cart");
         CartBook cartBook = new CartBook();
         cartBook.setBookId(bookId);
         cartBook.setQuantity(quantity);
         cartBook.setCartId(cartId);
         return JDBCCartBookRepository.getInstance().addBookToCartBook(cartBook);
     }
-
 }
