@@ -32,8 +32,8 @@ class JDBCCustomerRepositoryTest {
         JDBCCustomerRepository instance = JDBCCustomerRepository.getInstance();
 
         Customer c1 = new Customer();
-        c1.setName("Dmitry");
-        c1.setSurname("Zagorski");
+        c1.setName("First");
+        c1.setSurname("Second");
         c1.setAddress("Grodno");
         c1.setEmail("1@mail.ru");
         c1.setDateOfSignUp(Date.valueOf("2011-10-20"));
@@ -43,15 +43,10 @@ class JDBCCustomerRepositoryTest {
         c1.setRole(PersonRole.Admin);
 
         instance.saveCustomer(c1);
-
         Customer c2 = instance.getById(c1.getId());
-
         Assertions.assertEquals(c1, c2);
-
         c2.setName("Boris");
-
         instance.saveCustomer(c2);
-
         Customer customerAfterUpdate = instance.getById(c2.getId());
 
         Assertions.assertEquals("Boris", customerAfterUpdate.getName());
@@ -61,7 +56,7 @@ class JDBCCustomerRepositoryTest {
 
     @Test
     void removeCustomerById() {
-        //given
+
         JDBCCustomerRepository instance = JDBCCustomerRepository.getInstance();
 
         Customer c1 = new Customer();
@@ -75,13 +70,12 @@ class JDBCCustomerRepositoryTest {
         c1.setLocked(Boolean.FALSE);
         c1.setRole(PersonRole.Admin);
 
-        //when
         instance.removeAll();
         instance.saveCustomer(c1);
         int customerId = c1.getId();
         instance.removeById(customerId);
         List<Customer> allCustomers = instance.findAll();
-        //then
+
         Assertions.assertEquals(0, allCustomers.size());
     }
 
@@ -111,6 +105,7 @@ class JDBCCustomerRepositoryTest {
 
     @Test
     void getCustomerByLogin() {
+
         JDBCCustomerRepository instance = new JDBCCustomerRepository();
 
         instance.removeAll();
@@ -127,7 +122,6 @@ class JDBCCustomerRepositoryTest {
         c1.setRole(PersonRole.Admin);
 
         instance.saveCustomer(c1);
-
         Customer c2 = instance.getCustomerByLogin(c1.getLogin());
 
         Assertions.assertEquals(c1, c2);
@@ -161,10 +155,8 @@ class JDBCCustomerRepositoryTest {
         c2.setRole(PersonRole.Admin);
 
         instance.removeAll();
-
         instance.saveCustomer(c1);
         instance.saveCustomer(c2);
-
         List<Customer> allCustomers = instance.findAll();
 
         Assertions.assertEquals(2, allCustomers.size());
@@ -173,7 +165,7 @@ class JDBCCustomerRepositoryTest {
 
     @Test
     void removeAllCustomers() {
-        //given
+
         JDBCCustomerRepository instance = JDBCCustomerRepository.getInstance();
 
         Customer c1 = new Customer();
@@ -198,7 +190,6 @@ class JDBCCustomerRepositoryTest {
         c2.setLocked(Boolean.FALSE);
         c2.setRole(PersonRole.Admin);
 
-        //when
         instance.removeAll();
         instance.saveCustomer(c1);
         instance.saveCustomer(c2);
@@ -209,7 +200,6 @@ class JDBCCustomerRepositoryTest {
         int secondSize = allCustomers2.size();
         int result = firstSize-secondSize;
 
-        //then
         Assertions.assertEquals(2, result);
     }
 
