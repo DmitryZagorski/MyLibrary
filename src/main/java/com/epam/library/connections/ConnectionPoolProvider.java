@@ -26,7 +26,7 @@ public class ConnectionPoolProvider {
             config.setJdbcUrl(applicationProperties.getProperty("jdbc.url"));
             config.setUsername(applicationProperties.getProperty("jdbc.name"));
             config.setPassword(applicationProperties.getProperty("jdbc.password"));
-            config.setMaximumPoolSize(5);//max count of allowed connections
+            config.setMaximumPoolSize(10);//max count of allowed connections
             config.addDataSourceProperty("cachePrepStmts", "true");
             config.addDataSourceProperty("prepStmtCacheSize", "250");
             config.addDataSourceProperty("prepStmtCacheSqlLimit", "2048");
