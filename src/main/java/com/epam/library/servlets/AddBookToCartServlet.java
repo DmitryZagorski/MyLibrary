@@ -7,6 +7,7 @@ import com.epam.library.models.Customer;
 import com.epam.library.repositories.JDBCBookRepository;
 import com.epam.library.repositories.JDBCCartRepository;
 import com.epam.library.repositories.JDBCCustomerRepository;
+import com.epam.library.service.BookService;
 import com.epam.library.service.CartBookService;
 import com.epam.library.service.CartService;
 import org.slf4j.Logger;
@@ -26,49 +27,27 @@ public class AddBookToCartServlet extends HttpServlet {
 
     private static final Logger Log  = LoggerFactory.getLogger(AddBookToCartServlet.class);
 
-    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-
-    }
-
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
         Log.info("Getting parameters from catalog.jsp");
         Customer customer = (Customer) request.getSession().getAttribute("customer");
         int customerId = 0;
         if (customer == null){
-            response.setContentType("text/html");
-            PrintWriter out = response.getWriter();
-            out.println("<html>");
-            out.println("<head>");
-            out.println("<p> You have to sign in or sign up to add books to cart </p>");
-            out.println("</head>");
-            out.println("</html>");
+            request.getRequestDispatcher("/errorBookToCart.jsp").forward(request, response);
         }
         else{
             customerId = customer.getId();
         }
         String bookTitle = request.getParameter("bookTitle");
-        Book bookByTitle = JDBCBookRepository.getInstance().getBookByTitle(bookTitle);
-        int bookId = bookByTitle.getId();
-
-        List<Book> allBooks = JDBCBookRepository.getInstance().findAll();
-        for (Book book : allBooks) {
-            if (book.getId()==bookId) {
-                bookId = book.getId();
-            }
-        }
+        int bookId = BookService.getInstance().getBookIdByBookTitle(bookTitle);
         String bookQuan = request.getParameter("freeQuantity");
         int bookQuantity = Integer.parseInt(bookQuan);
 
         try {
             Customer customerById = JDBCCustomerRepository.getInstance().getById(customerId);
-            String customerLogin = customerById.getLogin();
-            request.setAttribute("customerLogin", customerLogin);
+            request.setAttribute("customerLogin", customerById.getLogin());
 
-            Cart cart = CartService.getInstance().addCart(customerId);
-            int cartId = JDBCCartRepository.getInstance().getCartIdByCustomerId(customerId);
-
-            CartBookService.getInstance().addCartBook(bookId, bookQuantity, cartId);
+            Cart cart = CartService.getInstance().addBookToCart(customerId, bookId, bookQuantity);
 
             request.setAttribute("addedId", cart.getId());
             request.setAttribute("addedBookTitle", bookTitle);
@@ -79,4 +58,7 @@ public class AddBookToCartServlet extends HttpServlet {
             throw new CartException(e);
         }
     }
+
+
+
 }

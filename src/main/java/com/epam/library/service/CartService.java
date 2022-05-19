@@ -28,4 +28,13 @@ public class CartService {
         cart.setCustomerId(customerId);
         return JDBCCartRepository.getInstance().addCart(cart);
     }
+
+    public Cart addBookToCart(int customerId, int bookId, int bookQuantity) {
+        Cart cart = CartService.getInstance().addCart(customerId);
+        int cartId = JDBCCartRepository.getInstance().getCartIdByCustomerId(customerId);
+
+        CartBookService.getInstance().addCartBook(bookId, bookQuantity, cartId);
+        return cart;
+    }
+
 }

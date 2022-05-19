@@ -1,8 +1,6 @@
 package com.epam.library.service;
 
-import com.epam.library.models.Cart;
 import com.epam.library.models.Order;
-import com.epam.library.repositories.JDBCCartRepository;
 import com.epam.library.repositories.JDBCOrderRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

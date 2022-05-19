@@ -65,6 +65,7 @@ public class JDBCCartRepository extends AbstractCRUDRepository<Cart> {
         String updateBookSQL = "update catalog set customer_id = ? where id = ?";
         PreparedStatement prStatement = null;
         try (Connection connection = ConnectionPoolProvider.getConnection()) {
+            connection.setAutoCommit(false);
             if (cart.getId() == 0) {
                 prStatement = connection.prepareStatement(insertBookSQL, prStatement.RETURN_GENERATED_KEYS);
             } else {
@@ -82,7 +83,9 @@ public class JDBCCartRepository extends AbstractCRUDRepository<Cart> {
             if (generatedKey.next()) {
                 cart.setId(generatedKey.getInt(1));
             }
+            connection.commit();
             return cart;
+
         } catch (SQLException e) {
             Log.error("Something wrong during adding cart", e);
             throw new EntitySavingException(e);

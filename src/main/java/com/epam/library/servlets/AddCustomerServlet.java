@@ -38,13 +38,10 @@ public class AddCustomerServlet extends HttpServlet {
         String password = request.getParameter("password");
 
         try {
-            CustomerService customerService = CustomerService.getInstance();
-
-            Customer customer = customerService.registerCustomer(name, surname, address, email, dateOfSignUp, PersonRole.Customer, Boolean.FALSE, login, password);
+            Customer customer = CustomerService.getInstance().registerCustomer(name, surname, address, email, dateOfSignUp, PersonRole.Customer, Boolean.FALSE, login, password);
             request.setAttribute("addedId", customer.getId());
 
             int customerId = JDBCCustomerRepository.getInstance().findLastIdOfCustomer();
-
             CartService.getInstance().addCart(customerId);
 
             request.getRequestDispatcher("allCustomersServlet").forward(request, response);

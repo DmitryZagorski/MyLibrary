@@ -2,9 +2,11 @@ package com.epam.library.service;
 
 import com.epam.library.models.Book;
 import com.epam.library.repositories.JDBCBookRepository;
-import com.epam.library.repositories.JDBCPlaceOfReading;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.sql.Date;
+import java.util.List;
 
 public class BookService {
 
@@ -23,7 +25,7 @@ public class BookService {
         return instance;
     }
 
-    public Book addBook(String title, String author, java.sql.Date issueDate, Integer genreId){
+    public Book addBook(String title, String author, Date issueDate, Integer genreId){
         Log.info("Setting of book values");
         Book book = new Book();
         book.setTitle(title);
@@ -32,4 +34,17 @@ public class BookService {
         book.setGenreId(genreId);
         return JDBCBookRepository.getInstance().saveBook(book);
     }
+
+    public Integer getBookIdByBookTitle(String bookTitle){
+        Book bookByTitle = JDBCBookRepository.getInstance().getBookByTitle(bookTitle);
+        int bookId = bookByTitle.getId();
+        List<Book> allBooks = JDBCBookRepository.getInstance().findAll();
+        for (Book book : allBooks) {
+            if (book.getId()==bookId) {
+                bookId = book.getId();
+            }
+        }
+        return bookId;
+    }
+
 }

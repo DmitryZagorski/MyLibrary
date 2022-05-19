@@ -68,8 +68,8 @@ public class PrepareCartToOrderServlet extends HttpServlet {
 
             int orderId = JDBCOrderRepository.getInstance().findLastIdOfOrder();
             List<CartBook> booksInCart = JDBCCartBookRepository.getInstance().findAllWithTitleWithJoinByCartId(cartIdByCustomerId);
-            List<Book> allBooks = JDBCBookRepository.getInstance().findAll();
 
+            List<Book> allBooks = JDBCBookRepository.getInstance().findAll();
             for (CartBook cartBook : booksInCart) {
                 for (Book allBook : allBooks) {
                     if (cartBook.getBookTitle().equalsIgnoreCase(allBook.getTitle())){

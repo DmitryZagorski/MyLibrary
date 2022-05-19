@@ -3,6 +3,7 @@ package com.epam.library.repositories;
 import com.epam.library.connections.ConnectionPoolProvider;
 import com.epam.library.exceptions.BookException;
 import com.epam.library.exceptions.BookNotFoundException;
+import com.epam.library.exceptions.EntityRerievalException;
 import com.epam.library.exceptions.EntitySavingException;
 import com.epam.library.models.Book;
 import com.epam.library.models.Genre;
@@ -96,6 +97,7 @@ public class JDBCBookRepository extends AbstractCRUDRepository<Book> {
         }
     }
 
+
     public List<Book> getBooksByTitle(String title) {
         Log.info("Getting list of books by title started");
         String getBookByTitle = "select * from books where title=".concat(title);
@@ -121,10 +123,7 @@ public class JDBCBookRepository extends AbstractCRUDRepository<Book> {
             ResultSet resultSet = statement.executeQuery(getBookByTitle);
             Book book = new Book();
             if (resultSet.next()) {
-                book.setId(resultSet.getInt("id"));
-                book.setTitle(resultSet.getString("title"));
-                book.setAuthor(resultSet.getString("author"));
-                book.setGenreId(resultSet.getInt("genre_id"));
+                book = new BookMapper().toObject(resultSet);
             }
             return book;
         } catch (SQLException e) {
@@ -214,4 +213,6 @@ public class JDBCBookRepository extends AbstractCRUDRepository<Book> {
         prStatement.setDate(3, book.getIssueDate());
         prStatement.setInt(4, book.getGenreId());
     }
+
+
 }

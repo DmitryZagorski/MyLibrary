@@ -5,6 +5,7 @@ import com.epam.library.models.Book;
 import com.epam.library.models.Catalog;
 import com.epam.library.repositories.JDBCBookRepository;
 import com.epam.library.repositories.JDBCCatalogRepository;
+import com.epam.library.service.CatalogService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -21,46 +22,22 @@ public class AddBookToCatalogServlet extends HttpServlet {
 
     private static final Logger Log = LoggerFactory.getLogger(AddBookToCatalogServlet.class);
 
-    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-
-    }
-
-    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) {
 
         Log.info("Getting parameters from addBookToCatalog.jsp");
         String bookID = request.getParameter("bookId");
         int bookId = Integer.parseInt(bookID);
         String totalQuantity = request.getParameter("quantity");
         int totalQuantityInt = Integer.parseInt(totalQuantity);
-        String freeQuantity = request.getParameter("quantity");
-        int freeQuantityInt = Integer.parseInt(freeQuantity);
+        int freeQuantityInt = totalQuantityInt;
 
         try {
-            Book byId = JDBCBookRepository.getInstance().getById(bookId);
-            String bookTitle = byId.getTitle();
-
-            Catalog catalog = new Catalog();
-            catalog.setBookId(bookId);
-            catalog.setTotalQuantity(totalQuantityInt);
-            catalog.setFreeQuantity(freeQuantityInt);
-
-            List<Catalog> allBooksInCatalog = JDBCCatalogRepository.getInstance().findAll();
-
-            boolean needToUpdate = false;
-            for (Catalog book : allBooksInCatalog) {
-                if (bookId == book.getBookId()) {
-                    needToUpdate = true;
-                    totalQuantityInt += book.getTotalQuantity();
-                }
-            }
-            if (needToUpdate) {
-                JDBCCatalogRepository.getInstance().updateTotalQuantityOfBook(bookId, totalQuantityInt);
-            } else {
-                JDBCCatalogRepository.getInstance().addBookToCatalog(catalog);
-            }
+            Catalog catalog = CatalogService.getInstance().addOrUpdateBookInCatalog(bookId, totalQuantityInt, freeQuantityInt);
 
             request.setAttribute("addedId", catalog.getId());
-            request.setAttribute("addedBookTitle", bookTitle);
+
+            Book byId = JDBCBookRepository.getInstance().getById(bookId);
+            request.setAttribute("addedBookTitle", byId.getTitle());
 
             request.getRequestDispatcher("/catalogServlet").forward(request, response);
         } catch (ServletException | IOException e) {
